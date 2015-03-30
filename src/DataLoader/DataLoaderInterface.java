@@ -5,4 +5,6 @@ package DataLoader;
  */
 public interface DataLoaderInterface {
 
+    public void loadData();
+
 }
