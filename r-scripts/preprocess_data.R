@@ -32,7 +32,8 @@ readChannel <- function(filenames = c(NULL)) {
 
 x <- readChannel(c("channel_1.dat", "channel_2.dat"));
 
-# library(zoo);
+library(zoo);
+# y <- zoo(x$value, order.by=x$datetime, frequency=1);
 # x <- na.approx(x);
 
 write.table(x, file="test.dat", row.names=FALSE, col.names=FALSE);
