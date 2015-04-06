@@ -35,6 +35,7 @@ preprocessChannel <- function(filenames = c(NULL), outputFilename) {
   
   data <- transform(data, value=rowSums(data[, 2:(length(filenames)+1)]));
   data$value <- round(data$value, digits=2);
+  data$datetime <- as.numeric(data$datetime);
   
   for (filename in filenames) {
     data[[filename]] <- NULL;
