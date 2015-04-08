@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * Gabriel Takács, Apr 2015
@@ -14,7 +15,9 @@ public class Channel {
 
     private String name;
 
-    private ArrayList<DataRow> data;
+    private Vector<Double> values;
+
+    private Vector<String> timestamps;
 
     public Channel(File file) {
         this.file = file;
@@ -30,12 +33,20 @@ public class Channel {
         this.name = name;
     }
 
-    public ArrayList<DataRow> getData() throws Exception {
-        if (this.data == null) {
+    public Vector<Double> getValues() throws Exception {
+        if (this.values == null) {
             this.readData();
         }
 
-        return this.data;
+        return this.values;
+    }
+
+    public Vector<String> getTimestamps() throws Exception {
+        if (this.timestamps == null) {
+            this.readData();
+        }
+
+        return this.timestamps;
     }
 
     private void readData() throws Exception {
@@ -43,17 +54,15 @@ public class Channel {
             throw new Exception("Channel file is not readable!");
         }
 
+        this.timestamps = new Vector<String>();
+        this.values = new Vector<Double>();
+
         BufferedReader reader = new BufferedReader(new FileReader(this.file));
         String line;
-        ArrayList<DataRow> data = new ArrayList<DataRow>();
         while ((line = reader.readLine()) != null) {
             String[] parts = line.split(" ");
-            DataRow row = new DataRow();
-            row.setTimestamp(parts[0]);
-            row.setValue(Float.parseFloat(parts[1]));
-            data.add(row);
+            this.timestamps.add(parts[0]);
+            this.values.add(Double.parseDouble(parts[1]));
         }
-
-        this.data = data;
     }
 }

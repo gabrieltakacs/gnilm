@@ -1,6 +1,5 @@
 package Processor;
 
-import Data.Window;
 import java.util.Iterator;
 import java.util.Vector;
 
