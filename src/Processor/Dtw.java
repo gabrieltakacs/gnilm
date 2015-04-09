@@ -1,5 +1,6 @@
 package Processor;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -10,7 +11,10 @@ public class Dtw {
 
     private double[][] results;
 
-    public Double calculateDistance(Window p, Window q) {
+    public Double calculateDistance(Window pWindow, Window qWindow) {
+
+        ArrayList<Double> p = pWindow.getValues();
+        ArrayList<Double> q = qWindow.getValues();
 
         this.results = new double[p.size()][q.size()];
 

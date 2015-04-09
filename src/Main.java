@@ -31,11 +31,11 @@ public class Main {
 
             System.out.println("Pocet detekovanych okien: " + windows.size());
 
-            Window testWindow = windows.get(0);
-
-            for (Iterator<Double> iterator = testWindow.iterator(); iterator.hasNext();) {
-                System.out.println(iterator.next());
-            }
+//            Window testWindow = windows.get(3);
+//
+//            for (Iterator<Double> iterator = testWindow.getValues().iterator(); iterator.hasNext();) {
+//                System.out.println(iterator.next());
+//            }
 
 
 
