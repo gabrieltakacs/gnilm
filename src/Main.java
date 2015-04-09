@@ -31,7 +31,8 @@ public class Main {
 
             System.out.println("Pocet detekovanych okien: " + windows.size());
 
-//            Window testWindow = windows.get(3);
+            Window testWindow = windows.get(3);
+            System.out.println("Window @ " + testWindow.getTimestamp().getValue());
 //
 //            for (Iterator<Double> iterator = testWindow.getValues().iterator(); iterator.hasNext();) {
 //                System.out.println(iterator.next());

@@ -1,5 +1,6 @@
 package Processor;
 
+import Data.Timestamp;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  */
 public class Window {
 
-    private String timestamp;
+    private Timestamp timestamp;
 
     private ArrayList<Double> values;
 
@@ -23,11 +24,11 @@ public class Window {
         return this.values;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 
-    public String getTimestamp() {
+    public Timestamp getTimestamp() {
         return this.timestamp;
     }
 

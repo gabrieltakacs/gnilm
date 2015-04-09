@@ -1,5 +1,8 @@
 package Processor;
 
+import Data.Timestamp;
+
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
@@ -16,12 +19,13 @@ public class WindowExtractor {
         Double previousValue = null;
         Double previousDiff = 0.0;
         Window currentWindow = null;
+        Integer rowIndex = 0;
         for (Iterator<Double> iterator = values.iterator(); iterator.hasNext();) {
             double value = iterator.next();
 
             if (previousValue != null) {
                     if (currentWindow != null && currentWindow.getValues().size() > 0) {
-                        if ((previousDiff > 0 && value - previousValue <= 0) || (previousDiff < 0 && value - previousValue >= 0)) {
+                        if ((previousDiff > 0 && value - previousValue <= 0) || (previousDiff < 0 && value - previousValue >= 0)) { // Change of direction
                             windows.add(currentWindow);
                             currentWindow = null;
                     }
@@ -30,6 +34,8 @@ public class WindowExtractor {
                 if (Math.abs(value - previousValue) > threshold) { // Event detected
                     if (currentWindow == null) { // Window has not been created yet
                         currentWindow = new Window(); // Create a new window
+                        Timestamp timestamp = new Timestamp(timestamps.get(rowIndex));
+                        currentWindow.setTimestamp(timestamp);
                         currentWindow.addValue(previousValue); // Add previous value to the window
                     }
                     currentWindow.addValue(value);
@@ -38,6 +44,7 @@ public class WindowExtractor {
             }
 
             previousValue = value;
+            rowIndex++;
         }
 
         if (currentWindow != null) {
