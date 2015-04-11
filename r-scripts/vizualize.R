@@ -50,4 +50,4 @@ data <- loadChannel("oven.dat", data); colors[["oven.dat"]] <- "black";
 data <- loadChannel("refridgerator.dat", data); colors[["refridgerator.dat"]] <- "green";
 data <- loadChannel("stove.dat", data); colors[["stove.dat"]] <- "cyan";
 data <- loadChannel("washer_dryer.dat", data); colors[["washer_dryer.dat"]] <- "orange";
-vizualize(data, colors, '2011-04-18 13:22:13', '2011-04-18 14:22:00');
+vizualize(data, colors, '2011-04-18 15:22:13', '2011-04-18 17:22:00');
