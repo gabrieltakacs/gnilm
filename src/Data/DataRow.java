@@ -1,30 +1,32 @@
 package Data;
 
-import java.math.BigInteger;
-import java.util.Date;
-
 /**
  * Gabriel Takács, Mar 2015
  */
 public class DataRow {
 
-    private String timestamp;
+    private Integer timestamp;
 
-    private float value;
+    private double value;
 
-    public String getTimestamp() {
+    public DataRow(Integer timestamp, Double value) {
+        this.timestamp = timestamp;
+        this.value = value;
+    }
+
+    public Integer getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(Integer timestamp) {
         this.timestamp = timestamp;
     }
 
-    public float getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(double value) {
         this.value = value;
     }
 

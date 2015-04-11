@@ -12,7 +12,7 @@ loadChannel <- function(filename, data) {
   }  
 }
 
-vizualize <- function(data, colors, dateFrom, dateTo) {
+vizualize <- function(data, colors, dateFrom, dateTo) {  
   cols <- colnames(data);
   dateFrom <- as.POSIXct(dateFrom, origin="1970-01-01");
   dateTo <- as.POSIXct(dateTo, origin="1970-01-01");
@@ -27,9 +27,7 @@ vizualize <- function(data, colors, dateFrom, dateTo) {
       }  
     }  
   }
-  
-  print(myMax);
-  
+    
   plot(data$datetime, as.vector(data[['mains.dat']]), col=colors[['mains.dat']], type="l", xlab="Time", ylim=c(0,myMax), ylab="Consumption (W)", main="Energy Consumption (House 1)");
   for (col in cols) {
     if (col != 'mains' && col != 'datetime') {
@@ -52,4 +50,4 @@ data <- loadChannel("oven.dat", data); colors[["oven.dat"]] <- "black";
 data <- loadChannel("refridgerator.dat", data); colors[["refridgerator.dat"]] <- "green";
 data <- loadChannel("stove.dat", data); colors[["stove.dat"]] <- "cyan";
 data <- loadChannel("washer_dryer.dat", data); colors[["washer_dryer.dat"]] <- "orange";
-vizualize(data, colors, '2011-04-21 14:20:00', '2011-04-21 15:20:00');
+vizualize(data, colors, '2011-04-18 13:22:13', '2011-04-18 14:22:00');

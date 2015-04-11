@@ -1,18 +1,19 @@
 package Processor;
 
-import Data.Timestamp;
-
-import java.sql.Time;
+import Data.DataFrame;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 
 /**
  * Gabriel Takács, Apr 2015
  */
 public class WindowExtractor {
 
-    public ArrayList<Window> detectWindows(Vector<Double> values, Vector<String> timestamps, double threshold) {
+    public static ArrayList<Window> detectWindows(DataFrame dataFrame, double threshold) {
+
+
+        ArrayList<Double> values = dataFrame.getValues();
+        ArrayList<Integer> timestamps = dataFrame.getTimestamps();
 
         ArrayList<Window> windows = new ArrayList<Window>();
 
@@ -34,8 +35,7 @@ public class WindowExtractor {
                 if (Math.abs(value - previousValue) > threshold) { // Event detected
                     if (currentWindow == null) { // Window has not been created yet
                         currentWindow = new Window(); // Create a new window
-                        Timestamp timestamp = new Timestamp(timestamps.get(rowIndex));
-                        currentWindow.setTimestamp(timestamp);
+                        currentWindow.setTimestamp(timestamps.get(rowIndex));
                         currentWindow.addValue(previousValue); // Add previous value to the window
                     }
                     currentWindow.addValue(value);

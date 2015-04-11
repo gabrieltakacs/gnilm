@@ -1,13 +1,11 @@
 import Data.Channel;
-import Data.DataRow;
+import Data.DataFrame;
 import Data.House;
 import DataLoader.ReddDataLoader.ReddDataLoader;
 import Processor.Window;
 import Processor.WindowExtractor;
-
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 
 /**
  * Gabriel Takács, Mar 2015
@@ -20,25 +18,29 @@ public class Main {
         try {
             dataLoader.setBaseDirectory("/home/gtakacs/fiit/bp/gnilm/data/");
             House house = dataLoader.getHouse("house1");
-            Channel channel = house.getChannel("mains");
 
-            Vector<Double> values = channel.getValues();
-            Vector<String> timestamps = channel.getTimestamps();
-            Double threshold = 10.0;
+            // Read mains channel
+            Channel mains = house.getChannel("mains");
+            DataFrame mainsDataFrame = mains.read(null, 1303130596);
+            ArrayList<Window> mainsWindows = WindowExtractor.detectWindows(mainsDataFrame, 10.0);
+            System.out.println("Mains windows: " + mainsWindows.size());
+            for (Iterator<Window> iterator = mainsWindows.iterator(); iterator.hasNext();) {
+                Window currentWindow = iterator.next();
+                currentWindow.printInfo();
+                currentWindow.printData();
+            }
 
-            WindowExtractor windowExtractor = new WindowExtractor();
-            ArrayList<Window> windows = windowExtractor.detectWindows(values, timestamps, threshold);
+            // Read bathroom channel
+            Channel bathroom = house.getChannel("bathroom");
+            DataFrame bathroomDataFrame = bathroom.read(null, 1303130596);
+            ArrayList<Window> bathroomWindwos = WindowExtractor.detectWindows(bathroomDataFrame, 10.0);
+            System.out.println("Bathroom windows: " + bathroomWindwos.size());
 
-            System.out.println("Pocet detekovanych okien: " + windows.size());
-
-            Window testWindow = windows.get(3);
-            System.out.println("Window @ " + testWindow.getTimestamp().getValue());
-//
-//            for (Iterator<Double> iterator = testWindow.getValues().iterator(); iterator.hasNext();) {
-//                System.out.println(iterator.next());
-//            }
-
-
+            for (Iterator<Window> iterator = bathroomWindwos.iterator(); iterator.hasNext();) {
+                Window currentWindow = iterator.next();
+                currentWindow.printInfo();
+                currentWindow.printData();
+            }
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

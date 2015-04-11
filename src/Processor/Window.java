@@ -1,14 +1,14 @@
 package Processor;
 
-import Data.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Gabriel Takács, Apr 2015
  */
 public class Window {
 
-    private Timestamp timestamp;
+    private Integer timestamp;
 
     private ArrayList<Double> values;
 
@@ -24,12 +24,22 @@ public class Window {
         return this.values;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(Integer timestamp) {
         this.timestamp = timestamp;
     }
 
-    public Timestamp getTimestamp() {
+    public Integer getTimestamp() {
         return this.timestamp;
+    }
+
+    public void printInfo() {
+        System.out.println("* Window @ " + this.timestamp + ", length: " + this.values.size());
+    }
+
+    public void printData() {
+        for (Iterator<Double> iterator = this.values.iterator(); iterator.hasNext();) {
+            System.out.println(iterator.next());
+        }
     }
 
 }
