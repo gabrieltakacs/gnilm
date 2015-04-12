@@ -20,53 +20,79 @@ public class Main {
             dataLoader.setBaseDirectory("/home/gtakacs/fiit/bp/gnilm/data/");
             House house = dataLoader.getHouse("house1");
 
-            // Read mains channel
+            /*
+             * Prepare training data
+             */
+
+            // Lighting
+            Channel lighting = house.getChannel("lighting");
+            DataFrame lightingDataFrame = lighting.read(null, 1303143733);
+            ArrayList<Window> lightingWindows = WindowExtractor.detectWindows(lightingDataFrame, 10.0);
+            System.out.println("Lighting windows: " + lightingWindows.size());
+            for (Iterator<Window> iterator = lightingWindows.iterator(); iterator.hasNext();) {
+                Window currentWindow = iterator.next();
+//                currentWindow.printInfo();
+            }
+
+            // Refridgerator
+            Channel refridgerator = house.getChannel("refridgerator");
+            DataFrame refridgeratorDataFrame = refridgerator.read(null, 1303143733);
+            ArrayList<Window> refridgeratorWindows = WindowExtractor.detectWindows(refridgeratorDataFrame, 10.0);
+            System.out.println("Refridgerator windows: " + refridgeratorWindows.size());
+            for (Iterator<Window> iterator = refridgeratorWindows.iterator(); iterator.hasNext();) {
+                Window currentWindow = iterator.next();
+//                currentWindow.printInfo();
+            }
+
+            // Bathroom
+            Channel bathroom = house.getChannel("bathroom");
+            DataFrame bathroomDataFrame = bathroom.read(null, 1303143733);
+            ArrayList<Window> bathroomWindows = WindowExtractor.detectWindows(bathroomDataFrame, 10.0);
+            System.out.println("Bathroom windows: " + bathroomWindows.size());
+            for (Iterator<Window> iterator = bathroomWindows.iterator(); iterator.hasNext();) {
+                Window currentWindow = iterator.next();
+//                currentWindow.printInfo();
+            }
+
+            /*
+             * Prepare test data
+             */
             Channel mains = house.getChannel("mains");
-            DataFrame mainsDataFrame = mains.read(null, 1303130730);
+            DataFrame mainsDataFrame = mains.read(null, 1303132929);
             ArrayList<Window> mainsWindows = WindowExtractor.detectWindows(mainsDataFrame, 10.0);
             System.out.println("Mains windows: " + mainsWindows.size());
             for (Iterator<Window> iterator = mainsWindows.iterator(); iterator.hasNext();) {
                 Window currentWindow = iterator.next();
                 currentWindow.printInfo();
                 currentWindow.printData();
-            }
 
-            // Read bathroom channel
-            Channel bathroom = house.getChannel("bathroom");
-            DataFrame bathroomDataFrame = bathroom.read(null, 1303130730);
-            ArrayList<Window> bathroomWindows = WindowExtractor.detectWindows(bathroomDataFrame, 10.0);
-            System.out.println("Bathroom windows: " + bathroomWindows.size());
-            for (Iterator<Window> iterator = bathroomWindows.iterator(); iterator.hasNext();) {
-                Window currentWindow = iterator.next();
-                currentWindow.printInfo();
-                currentWindow.printData();
-            }
+                // Porovnavam s lighting
+                System.out.println("LIGHTING");
+                for (Iterator<Window> lightingIterator = lightingWindows.iterator(); lightingIterator.hasNext();) {
+                    Window lightingWindow = lightingIterator.next();
+                    Dtw dtw = new Dtw();
+                    Double score = dtw.calculateDistance(currentWindow, lightingWindow);
+                    System.out.println("S(L) @ " + lightingWindow.getTimestamp() + ": " + score);
+                }
 
-            // Lighting
-            Channel lighting = house.getChannel("lighting");
-            DataFrame lightingDataFrame = lighting.read(null, 1303130730);
-            ArrayList<Window> lightingWindows = WindowExtractor.detectWindows(lightingDataFrame, 10.0);
-            System.out.println("Lighting windows: " + lightingWindows.size());
-            for (Iterator<Window> iterator = lightingWindows.iterator(); iterator.hasNext();) {
-                Window currentWindow = iterator.next();
-                currentWindow.printInfo();
-                currentWindow.printData();
-            }
+                // Porovnavam s refridgerator
+                System.out.println("REFRIDGERATOR");
+                for (Iterator<Window> refridgeratorIterator = refridgeratorWindows.iterator(); refridgeratorIterator.hasNext();) {
+                    Window refridgeratorWindow = refridgeratorIterator.next();
+                    Dtw dtw = new Dtw();
+                    Double score = dtw.calculateDistance(currentWindow, refridgeratorWindow);
+                    System.out.println("S(R) @ " + refridgeratorWindow.getTimestamp() + ": " + score);
+                }
 
-            // Kitchen
-            Channel kitchen = house.getChannel("kitchen");
-            DataFrame kitchenDataFrame = kitchen.read(null, 1303130730);
-            ArrayList<Window> kitchenWindows = WindowExtractor.detectWindows(kitchenDataFrame, 10.0);
-            System.out.println("Kitchen windows: " + kitchenWindows.size());
-            for (Iterator<Window> iterator = kitchenWindows.iterator(); iterator.hasNext();) {
-                Window currentWindow = iterator.next();
-                currentWindow.printInfo();
-                currentWindow.printData();
+                // Porovnavam s bathroom
+                System.out.println("BATHROOM");
+                for (Iterator<Window> bathroomIterator = bathroomWindows.iterator(); bathroomIterator.hasNext();) {
+                    Window bathroomWindow = bathroomIterator.next();
+                    Dtw dtw = new Dtw();
+                    Double score = dtw.calculateDistance(currentWindow, bathroomWindow);
+                    System.out.println("S(B) @ " + bathroomWindow.getTimestamp() + ": " + score);
+                }
             }
-
-            Dtw dtwProcessor1 = new Dtw();
-            Double score = dtwProcessor1.calculateDistance(mainsWindows.get(2), lightingWindows.get(0));
-            System.out.println("DTW score (M, B): " + score);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
