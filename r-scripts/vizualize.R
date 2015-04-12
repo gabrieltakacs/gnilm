@@ -13,6 +13,10 @@ loadChannel <- function(filename, data) {
 }
 
 vizualize <- function(data, colors, dateFrom, dateTo) {  
+  print(dateFrom);
+  print(dateTo);
+  #rint("Visualisation from " + toString(dateFrom) + " to " + toString(dateTo));
+  
   cols <- colnames(data);
   dateFrom <- as.POSIXct(dateFrom, origin="1970-01-01");
   dateTo <- as.POSIXct(dateTo, origin="1970-01-01");
@@ -50,4 +54,5 @@ data <- loadChannel("oven.dat", data); colors[["oven.dat"]] <- "black";
 data <- loadChannel("refridgerator.dat", data); colors[["refridgerator.dat"]] <- "green";
 data <- loadChannel("stove.dat", data); colors[["stove.dat"]] <- "cyan";
 data <- loadChannel("washer_dryer.dat", data); colors[["washer_dryer.dat"]] <- "orange";
-vizualize(data, colors, '2011-04-18 15:22:13', '2011-04-18 17:22:00');
+
+vizualize(data, colors, as.POSIXct(1303132665, origin="1970-01-01"), as.POSIXct(1303132675, origin="1970-01-01"));
