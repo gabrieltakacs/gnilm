@@ -61,6 +61,9 @@ public class Main {
             DataFrame mainsDataFrame = mains.read(null, 1303132929);
             ArrayList<Window> mainsWindows = WindowExtractor.detectWindows(mainsDataFrame, 10.0);
             System.out.println("Mains windows: " + mainsWindows.size());
+
+            Integer counter = 0;
+
             for (Iterator<Window> iterator = mainsWindows.iterator(); iterator.hasNext();) {
                 Window currentWindow = iterator.next();
                 currentWindow.printInfo();
@@ -70,29 +73,43 @@ public class Main {
                 System.out.println("LIGHTING");
                 for (Iterator<Window> lightingIterator = lightingWindows.iterator(); lightingIterator.hasNext();) {
                     Window lightingWindow = lightingIterator.next();
+                    if (lightingWindow.isIncreasing() != currentWindow.isIncreasing()) {
+                        continue;
+                    }
                     Dtw dtw = new Dtw();
                     Double score = dtw.calculateDistance(currentWindow, lightingWindow);
                     System.out.println("S(L) @ " + lightingWindow.getTimestamp() + ": " + score);
+                    counter++;
                 }
 
                 // Porovnavam s refridgerator
                 System.out.println("REFRIDGERATOR");
                 for (Iterator<Window> refridgeratorIterator = refridgeratorWindows.iterator(); refridgeratorIterator.hasNext();) {
                     Window refridgeratorWindow = refridgeratorIterator.next();
+                    if (refridgeratorWindow.isIncreasing() != currentWindow.isIncreasing()) {
+                        continue;
+                    }
                     Dtw dtw = new Dtw();
                     Double score = dtw.calculateDistance(currentWindow, refridgeratorWindow);
                     System.out.println("S(R) @ " + refridgeratorWindow.getTimestamp() + ": " + score);
+                    counter++;
                 }
 
                 // Porovnavam s bathroom
                 System.out.println("BATHROOM");
                 for (Iterator<Window> bathroomIterator = bathroomWindows.iterator(); bathroomIterator.hasNext();) {
                     Window bathroomWindow = bathroomIterator.next();
+                    if (bathroomWindow.isIncreasing() != currentWindow.isIncreasing()) {
+                        continue;
+                    }
                     Dtw dtw = new Dtw();
                     Double score = dtw.calculateDistance(currentWindow, bathroomWindow);
                     System.out.println("S(B) @ " + bathroomWindow.getTimestamp() + ": " + score);
+                    counter++;
                 }
             }
+
+            System.out.println("Celkovy pocet porovnani: " + counter);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
