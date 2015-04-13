@@ -2,6 +2,7 @@ package Processor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * Gabriel Takács, Apr 2015
@@ -59,8 +60,45 @@ public class Window {
         return this.isIncreasing;
     }
 
+    public Double calculateDistance(Window otherWindow) {
+        ArrayList<Double> otherWindowValues = otherWindow.getValues();
+
+        double cache[][] = new double[this.values.size()][otherWindowValues.size()];
+        for (int i = 1; i < this.values.size(); i++) {
+            for (int j = 1; j < otherWindowValues.size(); j++) {
+                Vector<Double> tmp = new Vector<Double>();
+                tmp.add(cache[i-1][j]);
+                tmp.add(cache[i-1][j-1]);
+                tmp.add(cache[i][j-1]);
+
+                double d = Math.abs(this.values.get(i) - otherWindowValues.get(i)) + this.getMinOfVector(tmp);
+                cache[i][j] = d;
+            }
+        }
+
+        return cache[this.values.size()-1][otherWindowValues.size()-1];
+    }
+
     private void setIncreasing(Boolean isIncreasing) {
         this.isIncreasing = isIncreasing;
+    }
+
+    private double getMinOfVector(Vector<Double> vector) {
+        Boolean isFirst = true;
+        double min = 0.0;
+        for (Iterator<Double> doubleIterator = vector.iterator(); doubleIterator.hasNext();) {
+            if (isFirst) {
+                min = doubleIterator.next();
+                isFirst = false;
+            } else {
+                double currentNumber = doubleIterator.next();
+                if (currentNumber < min) {
+                    min = currentNumber;
+                }
+            }
+        }
+
+        return min;
     }
 
 }
