@@ -8,6 +8,11 @@ import Processor.WindowExtractor;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/*
+ * TODO: vymysliet algoritmus na vypocet podobnosti. kedy je to match a kedy nie.
+ * TODO: skusit od kazdej hodnoty okna odcitat minimum
+ */
+
 /**
  * Gabriel Takács, Mar 2015
  */
@@ -76,8 +81,7 @@ public class Main {
                     if (lightingWindow.isIncreasing() != currentWindow.isIncreasing()) {
                         continue;
                     }
-                    Dtw dtw = new Dtw();
-                    Double score = dtw.calculateDistance(currentWindow, lightingWindow);
+                    Double score = currentWindow.calculateDistance(lightingWindow);
                     System.out.println("S(L) @ " + lightingWindow.getTimestamp() + ": " + score);
                     counter++;
                 }
@@ -89,8 +93,8 @@ public class Main {
                     if (refridgeratorWindow.isIncreasing() != currentWindow.isIncreasing()) {
                         continue;
                     }
-                    Dtw dtw = new Dtw();
-                    Double score = dtw.calculateDistance(currentWindow, refridgeratorWindow);
+                    Double score = currentWindow.calculateDistance(refridgeratorWindow);
+
                     System.out.println("S(R) @ " + refridgeratorWindow.getTimestamp() + ": " + score);
                     counter++;
                 }
@@ -102,8 +106,8 @@ public class Main {
                     if (bathroomWindow.isIncreasing() != currentWindow.isIncreasing()) {
                         continue;
                     }
-                    Dtw dtw = new Dtw();
-                    Double score = dtw.calculateDistance(currentWindow, bathroomWindow);
+                    Double score = currentWindow.calculateDistance(bathroomWindow);
+
                     System.out.println("S(B) @ " + bathroomWindow.getTimestamp() + ": " + score);
                     counter++;
                 }

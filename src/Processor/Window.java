@@ -67,10 +67,9 @@ public class Window {
         for (int i = 1; i < this.values.size(); i++) {
             for (int j = 1; j < otherWindowValues.size(); j++) {
                 Vector<Double> tmp = new Vector<Double>();
-                tmp.add(cache[i-1][j]);
-                tmp.add(cache[i-1][j-1]);
-                tmp.add(cache[i][j-1]);
-
+                tmp.add(this.getCacheElement(cache, i-1, j));
+                tmp.add(this.getCacheElement(cache, i-1, j-1));
+                tmp.add(this.getCacheElement(cache, i, j-1));
                 double d = Math.abs(this.values.get(i) - otherWindowValues.get(i)) + this.getMinOfVector(tmp);
                 cache[i][j] = d;
             }
@@ -99,6 +98,16 @@ public class Window {
         }
 
         return min;
+    }
+
+    private double getCacheElement(double[][] cache, int x, int y) {
+        if (x == 0 && y == 0) {
+            return 0.0;
+        } else if (x == 0 || y == 0) {
+            return Double.POSITIVE_INFINITY;
+        }
+
+        return cache[x][y];
     }
 
 }
