@@ -1,17 +1,6 @@
-import Data.Channel;
-import Data.DataFrame;
 import Data.House;
 import DataLoader.ReddDataLoader.ReddDataLoader;
-import Processor.Dtw;
-import Processor.Window;
-import Processor.WindowExtractor;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-/*
- * TODO: vymysliet algoritmus na vypocet podobnosti. kedy je to match a kedy nie.
- * TODO: skusit od kazdej hodnoty okna odcitat minimum
- */
+import Processor.Processor;
 
 /**
  * Gabriel Takács, Mar 2015
@@ -25,96 +14,16 @@ public class Main {
             dataLoader.setBaseDirectory("/home/gtakacs/fiit/bp/gnilm/data/");
             House house = dataLoader.getHouse("house1");
 
-            /*
-             * Prepare training data
-             */
-
-            // Lighting
-            Channel lighting = house.getChannel("lighting");
-            DataFrame lightingDataFrame = lighting.read(null, 1303143733);
-            ArrayList<Window> lightingWindows = WindowExtractor.detectWindows(lightingDataFrame, 10.0);
-            System.out.println("Lighting windows: " + lightingWindows.size());
-            for (Iterator<Window> iterator = lightingWindows.iterator(); iterator.hasNext();) {
-                Window currentWindow = iterator.next();
-//                currentWindow.printInfo();
-            }
-
-            // Refridgerator
-            Channel refridgerator = house.getChannel("refridgerator");
-            DataFrame refridgeratorDataFrame = refridgerator.read(null, 1303143733);
-            ArrayList<Window> refridgeratorWindows = WindowExtractor.detectWindows(refridgeratorDataFrame, 10.0);
-            System.out.println("Refridgerator windows: " + refridgeratorWindows.size());
-            for (Iterator<Window> iterator = refridgeratorWindows.iterator(); iterator.hasNext();) {
-                Window currentWindow = iterator.next();
-//                currentWindow.printInfo();
-            }
-
-            // Bathroom
-            Channel bathroom = house.getChannel("bathroom");
-            DataFrame bathroomDataFrame = bathroom.read(null, 1303143733);
-            ArrayList<Window> bathroomWindows = WindowExtractor.detectWindows(bathroomDataFrame, 10.0);
-            System.out.println("Bathroom windows: " + bathroomWindows.size());
-            for (Iterator<Window> iterator = bathroomWindows.iterator(); iterator.hasNext();) {
-                Window currentWindow = iterator.next();
-//                currentWindow.printInfo();
-            }
-
-            /*
-             * Prepare test data
-             */
-            Channel mains = house.getChannel("mains");
-            DataFrame mainsDataFrame = mains.read(null, 1303132929);
-            ArrayList<Window> mainsWindows = WindowExtractor.detectWindows(mainsDataFrame, 10.0);
-            System.out.println("Mains windows: " + mainsWindows.size());
-
-            Integer counter = 0;
-
-            for (Iterator<Window> iterator = mainsWindows.iterator(); iterator.hasNext();) {
-                Window currentWindow = iterator.next();
-                currentWindow.printInfo();
-                currentWindow.printData();
-
-                // Porovnavam s lighting
-                System.out.println("LIGHTING");
-                for (Iterator<Window> lightingIterator = lightingWindows.iterator(); lightingIterator.hasNext();) {
-                    Window lightingWindow = lightingIterator.next();
-                    if (lightingWindow.isIncreasing() != currentWindow.isIncreasing()) {
-                        continue;
-                    }
-                    Double score = currentWindow.calculateDistance(lightingWindow);
-                    System.out.println("S(L) @ " + lightingWindow.getTimestamp() + ": " + score);
-                    counter++;
-                }
-
-                // Porovnavam s refridgerator
-                System.out.println("REFRIDGERATOR");
-                for (Iterator<Window> refridgeratorIterator = refridgeratorWindows.iterator(); refridgeratorIterator.hasNext();) {
-                    Window refridgeratorWindow = refridgeratorIterator.next();
-                    if (refridgeratorWindow.isIncreasing() != currentWindow.isIncreasing()) {
-                        continue;
-                    }
-                    Double score = currentWindow.calculateDistance(refridgeratorWindow);
-
-                    System.out.println("S(R) @ " + refridgeratorWindow.getTimestamp() + ": " + score);
-                    counter++;
-                }
-
-                // Porovnavam s bathroom
-                System.out.println("BATHROOM");
-                for (Iterator<Window> bathroomIterator = bathroomWindows.iterator(); bathroomIterator.hasNext();) {
-                    Window bathroomWindow = bathroomIterator.next();
-                    if (bathroomWindow.isIncreasing() != currentWindow.isIncreasing()) {
-                        continue;
-                    }
-                    Double score = currentWindow.calculateDistance(bathroomWindow);
-
-                    System.out.println("S(B) @ " + bathroomWindow.getTimestamp() + ": " + score);
-                    counter++;
-                }
-            }
-
-            System.out.println("Celkovy pocet porovnani: " + counter);
-
+            // Safe: 1303129329, 1303136529
+            Processor processor = new Processor();
+            processor.setTrainDataRange(1303129329, 1303734129);
+            processor.setTestDataRange(1303137130, 1303137730);
+            processor.setHouse(house);
+            processor.addTrainDataChannel("lighting");
+            processor.addTrainDataChannel("refridgerator");
+            processor.addTrainDataChannel("bathroom");
+            processor.addTrainDataChannel("microwave");
+            processor.detectEvents();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

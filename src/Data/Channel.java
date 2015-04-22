@@ -1,8 +1,12 @@
 package Data;
 
+import Processor.Window;
+import Processor.WindowExtractor;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 /**
  * Gabriel Takács, Apr 2015
@@ -12,6 +16,8 @@ public class Channel {
     private File file;
 
     private String name;
+
+    private ArrayList<Window> windows;
 
     public Channel(File file) {
         this.file = file;
@@ -25,6 +31,16 @@ public class Channel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    // TODO: ak tu chcem mat local caching, nemozem tu zadavat from a to ako parametre!
+    public ArrayList<Window> getWindows(Integer timestampFrom, Integer timestampTo) throws Exception {
+        if (this.windows == null) { // Local caching
+            DataFrame dataFrame = this.read(timestampFrom, timestampTo);
+            this.windows = WindowExtractor.detectWindows(dataFrame, 10.0);
+        }
+
+        return this.windows;
     }
 
     public DataFrame read(Integer timestampFrom, Integer timestampTo) throws Exception {

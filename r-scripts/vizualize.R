@@ -55,4 +55,4 @@ data <- loadChannel("refridgerator.dat", data); colors[["refridgerator.dat"]] <-
 data <- loadChannel("stove.dat", data); colors[["stove.dat"]] <- "cyan";
 data <- loadChannel("washer_dryer.dat", data); colors[["washer_dryer.dat"]] <- "orange";
 
-vizualize(data, colors, as.POSIXct(1303132664, origin="1970-01-01"), as.POSIXct(1303132674, origin="1970-01-01"));
+vizualize(data, colors, as.POSIXct(1303137130, origin="1970-01-01"), as.POSIXct(1303137730, origin="1970-01-01"));
