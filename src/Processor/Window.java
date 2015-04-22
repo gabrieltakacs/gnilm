@@ -15,6 +15,8 @@ public class Window {
 
     private Boolean isIncreasing = null;
 
+    private Double minValue;
+
     public Window() {
         this.values = new ArrayList<Double>();
     }
@@ -29,6 +31,10 @@ public class Window {
                     this.setIncreasing(false);
                 }
             }
+        }
+
+        if (this.minValue == null || value < this.minValue) {
+            this.minValue = value;
         }
 
         this.values.add(value);
@@ -76,6 +82,15 @@ public class Window {
         }
 
         return cache[this.values.size()-1][otherWindowValues.size()-1];
+    }
+
+    public void close() {
+        int i = 0;
+        for (Iterator<Double> iterator = this.values.iterator(); iterator.hasNext();) {
+            Double value = iterator.next();
+            value -= this.minValue;
+            this.values.set(i, value);
+        }
     }
 
     private void setIncreasing(Boolean isIncreasing) {

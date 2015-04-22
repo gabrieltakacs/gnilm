@@ -27,6 +27,7 @@ public class WindowExtractor {
             if (previousValue != null) {
                     if (currentWindow != null && currentWindow.getValues().size() > 0) {
                         if ((previousDiff > 0 && value - previousValue <= 0) || (previousDiff < 0 && value - previousValue >= 0)) { // Change of direction
+                            currentWindow.close();
                             windows.add(currentWindow);
                             currentWindow = null;
                     }
@@ -48,6 +49,7 @@ public class WindowExtractor {
         }
 
         if (currentWindow != null) {
+            currentWindow.close();
             windows.add(currentWindow);
         }
 
