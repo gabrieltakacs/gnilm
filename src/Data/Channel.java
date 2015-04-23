@@ -1,8 +1,8 @@
 package Data;
 
+import Configuration.Configuration;
 import Processor.Window;
 import Processor.WindowExtractor;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -19,10 +19,13 @@ public class Channel {
 
     private ArrayList<Window> windows;
 
+    private Double windowThreshold;
+
     public Channel(File file) {
         this.file = file;
         String name = file.getName().replaceFirst("[.][^.]+$", "");
         this.setName(name);
+        this.setWindowThreshold(Configuration.defaultWindowThreshold);
     }
 
     public String getName() {
@@ -37,7 +40,7 @@ public class Channel {
     public ArrayList<Window> getWindows(Integer timestampFrom, Integer timestampTo) throws Exception {
         if (this.windows == null) { // Local caching
             DataFrame dataFrame = this.read(timestampFrom, timestampTo);
-            this.windows = WindowExtractor.detectWindows(dataFrame, 10.0);
+            this.windows = WindowExtractor.detectWindows(dataFrame, this.windowThreshold);
         }
 
         return this.windows;
@@ -70,6 +73,11 @@ public class Channel {
         }
 
         return dataFrame;
+    }
+
+    public Channel setWindowThreshold(Double threshold) {
+        this.windowThreshold = threshold;
+        return this;
     }
 
 }

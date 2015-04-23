@@ -16,14 +16,14 @@ public class Main {
 
             // Safe: 1303129329, 1303136529
             Processor processor = new Processor();
-            processor.setTrainDataRange(1303129329, 1303734129); // Prvy tyzden
-            processor.setTestDataRange(1303737430, 1303741030); // Dalsich 10 minut
+            processor.setTrainDataRange(1303129329, 1303734129); // The first week
+            processor.setTestDataRange(1303737430, 1303741030);
             processor.setHouse(house);
-            processor.addTrainDataChannel(house.getChannel("lighting"));
-            processor.addTrainDataChannel(house.getChannel("refridgerator"));
-            processor.addTrainDataChannel(house.getChannel("bathroom"));
-            processor.addTrainDataChannel(house.getChannel("microwave"));
-            processor.addTrainDataChannel(house.getChannel("kitchen"));
+            processor.addTrainDataChannel(house.getChannel("lighting").setWindowThreshold(10.0));
+            processor.addTrainDataChannel(house.getChannel("refridgerator").setWindowThreshold(10.0));
+            processor.addTrainDataChannel(house.getChannel("bathroom").setWindowThreshold(10.0));
+            processor.addTrainDataChannel(house.getChannel("microwave").setWindowThreshold(10.0));
+            processor.addTrainDataChannel(house.getChannel("kitchen").setWindowThreshold(10.0));
             processor.detectEvents();
         } catch (Exception e) {
             System.out.println(e.getMessage());
