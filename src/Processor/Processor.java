@@ -18,10 +18,10 @@ public class Processor {
 
     private House house;
 
-    private ArrayList<String> trainDataChannels;
+    private ArrayList<Channel> trainDataChannels;
 
     public Processor() {
-        this.trainDataChannels = new ArrayList<String>();
+        this.trainDataChannels = new ArrayList<Channel>();
     }
 
     public void setTrainDataRange(Integer from, Integer to) {
@@ -38,8 +38,8 @@ public class Processor {
         this.house = house;
     }
 
-    public void addTrainDataChannel(String channelName) {
-        this.trainDataChannels.add(channelName);
+    public void addTrainDataChannel(Channel channel) {
+        this.trainDataChannels.add(channel);
     }
 
     public void detectEvents() throws Exception {
@@ -48,18 +48,20 @@ public class Processor {
 
         // Detect channels windows
         ArrayList<Channel> channels = new ArrayList<Channel>();
-        for (Iterator<String> trainChannelsIterator = this.trainDataChannels.iterator(); trainChannelsIterator.hasNext();) { // Iterate over each channel
-            Channel channel = house.getChannel(trainChannelsIterator.next());
+        for (Iterator<Channel> trainChannelsIterator = this.trainDataChannels.iterator(); trainChannelsIterator.hasNext();) { // Iterate over each channel
+            Channel channel = trainChannelsIterator.next();
             channels.add(channel);
         }
 
         Double minScore = null;
         String channelName = null;
         Integer timestamp = null;
+        Window winningWindow = null;
 
         for (Iterator<Window> mainsWindowsIterator = mainsChannel.getWindows(this.testDataFrom, this.testDataTo).iterator(); mainsWindowsIterator.hasNext();) {
             Window currentMainsWindow = mainsWindowsIterator.next();
             System.out.println("Mains window @ " + currentMainsWindow.getTimestamp());
+            currentMainsWindow.printData();
 
             for (Iterator<Channel> channelIterator = channels.iterator(); channelIterator.hasNext();) {
                 Channel currentChannel = channelIterator.next();
@@ -71,25 +73,22 @@ public class Processor {
                     }
 
                     Double currentScore = currentMainsWindow.calculateDistance(currentChannelWindow);
-                    System.out.println(currentChannel.getName() + " @ " + currentChannelWindow.getTimestamp() + "\t" + currentScore.toString());
+//                    System.out.println(currentChannel.getName() + " @ " + currentChannelWindow.getTimestamp() + "\t" + currentScore.toString());
 
                     if (minScore == null || currentScore < minScore) {
                         minScore = currentScore;
                         channelName = currentChannel.getName();
                         timestamp = currentChannelWindow.getTimestamp();
+                        winningWindow = currentChannelWindow;
                     }
                 }
             }
 
             System.out.println("W: " + channelName + " @ " + timestamp + ", S: " + minScore);
+            winningWindow.printData();
             System.out.println("* * *");
         }
 
-
-
     }
-
-
-
 
 }
