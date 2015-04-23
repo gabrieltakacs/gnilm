@@ -10,11 +10,8 @@ import java.util.Iterator;
 public class WindowExtractor {
 
     public static ArrayList<Window> detectWindows(DataFrame dataFrame, double threshold) {
-
-
         ArrayList<Double> values = dataFrame.getValues();
         ArrayList<Integer> timestamps = dataFrame.getTimestamps();
-
         ArrayList<Window> windows = new ArrayList<Window>();
 
         Double previousValue = null;
@@ -27,7 +24,6 @@ public class WindowExtractor {
             if (previousValue != null) {
                     if (currentWindow != null && currentWindow.getValues().size() > 0) {
                         if ((previousDiff > 0 && value - previousValue <= 0) || (previousDiff < 0 && value - previousValue >= 0)) { // Change of direction
-                            currentWindow.close();
                             windows.add(currentWindow);
                             currentWindow = null;
                     }
@@ -49,9 +45,13 @@ public class WindowExtractor {
         }
 
         if (currentWindow != null) {
-            currentWindow.close();
             windows.add(currentWindow);
         }
+
+        // Close all windows
+//        for (Iterator<Window> iterator = windows.iterator(); iterator.hasNext();) {
+//            iterator.next().close();
+//        }
 
         return windows;
     }
