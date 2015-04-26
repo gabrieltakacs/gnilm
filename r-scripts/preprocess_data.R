@@ -19,7 +19,7 @@ paddingTimeSeriesData <- function(raw.data) {
 # Chybajuce hodnoty v jednotlivych suboroch su dopocitane pomocou linearnej interpolacie. Data z toho
 # isteho kanalu su nasledne scitane.
 preprocessChannel <- function(filenames = c(NULL), outputFilename) {
-  setwd("/home/gtakacs/fiit/bp/data-sets/redd/low_freq/house_1/");
+  setwd("/home/gtakacs/fiit/bp/data-sets/redd/low_freq/house_2/");
   data <- NULL;
   
   for (filename in filenames) {
@@ -41,18 +41,29 @@ preprocessChannel <- function(filenames = c(NULL), outputFilename) {
     data[[filename]] <- NULL;
   }
   
-  outputFilePath <- paste("/home/gtakacs/fiit/bp/gnilm/data/house1/", outputFilename, sep='');
+  outputFilePath <- paste("/home/gtakacs/fiit/bp/gnilm/data/house2/", outputFilename, sep='');
   write.table(data, file=outputFilePath, row.names=FALSE, col.names=FALSE);  
 }
 
+#preprocessChannel(c("channel_1.dat", "channel_2.dat"), "mains.dat");
+#preprocessChannel(c("channel_3.dat", "channel_4.dat"), "oven.dat");
+#preprocessChannel(c("channel_5.dat"), "refridgerator.dat");
+#preprocessChannel(c("channel_6.dat"), "dishwasher.dat");
+#preprocessChannel(c("channel_7.dat", "channel_8.dat", "channel_15.dat", "channel_16.dat"), "kitchen.dat");
+#preprocessChannel(c("channel_9.dat", "channel_17.dat", "channel_18.dat"), "lighting.dat");
+#preprocessChannel(c("channel_10.dat", "channel_19.dat", "channel_20.dat"), "washer_dryer.dat");
+#preprocessChannel(c("channel_11.dat"), "microwave.dat");
+#preprocessChannel(c("channel_12.dat"), "bathroom.dat");
+#preprocessChannel(c("channel_13.dat"), "electric_heat.dat");
+#preprocessChannel(c("channel_14.dat"), "stove.dat");
+
 preprocessChannel(c("channel_1.dat", "channel_2.dat"), "mains.dat");
-preprocessChannel(c("channel_3.dat", "channel_4.dat"), "oven.dat");
-preprocessChannel(c("channel_5.dat"), "refridgerator.dat");
-preprocessChannel(c("channel_6.dat"), "dishwasher.dat");
-preprocessChannel(c("channel_7.dat", "channel_8.dat", "channel_15.dat", "channel_16.dat"), "kitchen.dat");
-preprocessChannel(c("channel_9.dat", "channel_17.dat", "channel_18.dat"), "lighting.dat");
-preprocessChannel(c("channel_10.dat", "channel_19.dat", "channel_20.dat"), "washer_dryer.dat");
-preprocessChannel(c("channel_11.dat"), "microwave.dat");
-preprocessChannel(c("channel_12.dat"), "bathroom.dat");
-preprocessChannel(c("channel_13.dat"), "electric_heat.dat");
-preprocessChannel(c("channel_14.dat"), "stove.dat");
+preprocessChannel(c("channel_3.dat"), "kitchen1.dat");
+preprocessChannel(c("channel_4.dat"), "lighting.dat");
+preprocessChannel(c("channel_5.dat"), "stove.dat");
+preprocessChannel(c("channel_6.dat"), "microwave.dat");
+preprocessChannel(c("channel_7.dat"), "washer.dat");
+preprocessChannel(c("channel_8.dat"), "kitchen2.dat");
+preprocessChannel(c("channel_9.dat"), "refridgerator.dat");
+preprocessChannel(c("channel_10.dat"), "dishwasher.dat");
+preprocessChannel(c("channel_11.dat"), "disposal.dat");

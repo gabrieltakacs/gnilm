@@ -9,7 +9,7 @@ import java.util.Iterator;
  */
 public class WindowExtractor {
 
-    public static ArrayList<Window> detectWindows(DataFrame dataFrame, double threshold) {
+    public static ArrayList<Window> detectWindows(DataFrame dataFrame, double threshold, Boolean detectAllWindows) {
         ArrayList<Double> values = dataFrame.getValues();
         ArrayList<Integer> timestamps = dataFrame.getTimestamps();
         ArrayList<Window> windows = new ArrayList<Window>();
@@ -24,6 +24,7 @@ public class WindowExtractor {
             if (previousValue != null) {
                     if (currentWindow != null && currentWindow.getValues().size() > 0) {
                         if ((previousDiff > 0 && value - previousValue <= 0) || (previousDiff < 0 && value - previousValue >= 0)) { // Change of direction
+//                            currentWindow.close();
                             windows.add(currentWindow);
                             currentWindow = null;
                     }
@@ -45,12 +46,21 @@ public class WindowExtractor {
         }
 
         if (currentWindow != null) {
+//            currentWindow.close();
             windows.add(currentWindow);
         }
 
-        // Close all windows
-//        for (Iterator<Window> iterator = windows.iterator(); iterator.hasNext();) {
-//            iterator.next().close();
+//        if (!detectAllWindows) {
+//            ArrayList<Window> filteredWindows = new ArrayList<Window>();
+//
+//            for (Iterator<Window> iterator = windows.iterator(); iterator.hasNext();) {
+//                Window theWindow = iterator.next();
+//                if (theWindow.getMinValue() <= 10.0) {
+//                    filteredWindows.add(theWindow);
+//                }
+//            }
+
+//            return filteredWindows;
 //        }
 
         return windows;

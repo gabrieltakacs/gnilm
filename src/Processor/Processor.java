@@ -39,12 +39,14 @@ public class Processor {
     }
 
     public void addTrainDataChannel(Channel channel) {
+        channel.setIsMainsChannel(false);
         this.trainDataChannels.add(channel);
     }
 
     public void detectEvents() throws Exception {
         // Detect mains windows
         Channel mainsChannel = house.getChannel("mains");
+        mainsChannel.setIsMainsChannel(true);
 
         // Detect channels windows
         ArrayList<Channel> channels = new ArrayList<Channel>();
@@ -53,17 +55,22 @@ public class Processor {
             channels.add(channel);
         }
 
-        Double minScore = null;
-        String channelName = null;
-        Integer timestamp = null;
-        Window winningWindow = null;
-
         for (Iterator<Window> mainsWindowsIterator = mainsChannel.getWindows(this.testDataFrom, this.testDataTo).iterator(); mainsWindowsIterator.hasNext();) {
+
+            Double minScore = null;
+            String channelName = null;
+            Integer timestamp = null;
+            Window winningWindow = null;
+
             Window currentMainsWindow = mainsWindowsIterator.next();
             System.out.println("Mains window @ " + currentMainsWindow.getTimestamp());
             currentMainsWindow.printData();
 
             for (Iterator<Channel> channelIterator = channels.iterator(); channelIterator.hasNext();) {
+
+                Double skoreKanal = 0.0;
+                Integer okienKanal = 0;
+
                 Channel currentChannel = channelIterator.next();
                 for (Iterator<Window> channelWindowsIterator = currentChannel.getWindows(this.trainDataFrom, this.trainDataTo).iterator(); channelWindowsIterator.hasNext();) {
                     Window currentChannelWindow = channelWindowsIterator.next();
@@ -73,7 +80,11 @@ public class Processor {
                     }
 
                     Double currentScore = currentMainsWindow.calculateDistance(currentChannelWindow);
-//                    System.out.println(currentChannel.getName() + " @ " + currentChannelWindow.getTimestamp() + "\t" + currentScore.toString());
+
+                    skoreKanal += currentScore;
+                    okienKanal++;
+
+                    System.out.println(currentChannel.getName() + " @ " + currentChannelWindow.getTimestamp() + "\t" + currentScore.toString());
 
                     if (minScore == null || currentScore < minScore) {
                         minScore = currentScore;
@@ -82,9 +93,19 @@ public class Processor {
                         winningWindow = currentChannelWindow;
                     }
                 }
+
+                Double priemer = skoreKanal / okienKanal;
+                System.out.println("Skore pre kanal " + currentChannel.getName() + ": " + priemer);
             }
 
             System.out.println("W: " + channelName + " @ " + timestamp + ", S: " + minScore);
+
+            if (winningWindow.isIncreasing()) {
+                System.out.println("UP");
+            } else {
+                System.out.println("DOWN");
+            }
+
             winningWindow.printData();
             System.out.println("* * *");
         }
