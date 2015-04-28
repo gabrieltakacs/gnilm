@@ -9,60 +9,70 @@ import java.util.Iterator;
  */
 public class WindowExtractor {
 
-    public static ArrayList<Window> detectWindows(DataFrame dataFrame, double threshold, Boolean detectAllWindows) {
-        ArrayList<Double> values = dataFrame.getValues();
-        ArrayList<Integer> timestamps = dataFrame.getTimestamps();
-        ArrayList<Window> windows = new ArrayList<Window>();
+    private ArrayList<Window> windows;
 
-        Double previousValue = null;
-        Double previousDiff = 0.0;
-        Window currentWindow = null;
-        Integer rowIndex = 0;
-        for (Iterator<Double> iterator = values.iterator(); iterator.hasNext();) {
-            double value = iterator.next();
+    public WindowExtractor() {
+        this.windows = new ArrayList<Window>();
+    }
 
-            if (previousValue != null) {
-                    if (currentWindow != null && currentWindow.getValues().size() > 0) {
-                        if ((previousDiff > 0 && value - previousValue <= 0) || (previousDiff < 0 && value - previousValue >= 0)) { // Change of direction
-//                            currentWindow.close();
-                            windows.add(currentWindow);
-                            currentWindow = null;
+    public ArrayList<Window> detectWindows(DataFrame dataFrame, double threshold) {
+
+        Integer numberOfClosingValues = 3;
+
+        Window window = null;
+        Double lastValue = null;
+
+        Integer savedClosingValues = 0;
+        Integer index = 0;
+        for (Iterator<Double> iterator = dataFrame.getValues().iterator(); iterator.hasNext();) {
+            Double value = iterator.next();
+
+            if (lastValue != null)
+            {
+                if (Math.abs(lastValue - value) > threshold) {
+                    if (savedClosingValues > 0) {
+                        savedClosingValues = 0;
                     }
-                }
 
-                if (Math.abs(value - previousValue) > threshold) { // Event detected
-                    if (currentWindow == null) { // Window has not been created yet
-                        currentWindow = new Window(); // Create a new window
-                        currentWindow.setTimestamp(timestamps.get(rowIndex));
-                        currentWindow.addValue(previousValue); // Add previous value to the window
+                    // Event has just started
+                    if (window == null) {
+                        window = new Window();
+                        window.setTimestamp(dataFrame.getTimestamps().get(index-1));
+                        window.addValue(lastValue);
                     }
-                    currentWindow.addValue(value);
-                    previousDiff = value - previousValue;
+
+                    // Add current value to the event
+                    window.addValue(value);
+                } else {
+                    if (window != null) { // There is an active window
+                        if (savedClosingValues < numberOfClosingValues) {
+                            window.addValue(value);
+                            savedClosingValues++;
+                        } else {
+                            this.addWindow(window);
+                            savedClosingValues = 0;
+                            window = null;
+                        }
+                    }
                 }
             }
 
-            previousValue = value;
-            rowIndex++;
+            lastValue = value;
+            index++;
         }
 
-        if (currentWindow != null) {
-//            currentWindow.close();
-            windows.add(currentWindow);
+        // Save unfinished window
+        if (window != null) {
+            this.addWindow(window);
         }
 
-//        if (!detectAllWindows) {
-//            ArrayList<Window> filteredWindows = new ArrayList<Window>();
-//
-//            for (Iterator<Window> iterator = windows.iterator(); iterator.hasNext();) {
-//                Window theWindow = iterator.next();
-//                if (theWindow.getMinValue() <= 10.0) {
-//                    filteredWindows.add(theWindow);
-//                }
-//            }
-
-//            return filteredWindows;
-//        }
-
-        return windows;
+        return this.windows;
     }
+
+    private void addWindow(Window window) {
+        if (window != null && window.getValues().size() > 2) {
+            this.windows.add(window);
+        }
+    }
+
 }

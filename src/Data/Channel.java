@@ -21,14 +21,11 @@ public class Channel {
 
     private Double windowThreshold;
 
-    private Boolean isMainsChannel;
-
     public Channel(File file) {
         this.file = file;
         String name = file.getName().replaceFirst("[.][^.]+$", "");
         this.setName(name);
         this.setWindowThreshold(Configuration.defaultWindowThreshold);
-        this.isMainsChannel = null;
     }
 
     public String getName() {
@@ -43,7 +40,9 @@ public class Channel {
     public ArrayList<Window> getWindows(Integer timestampFrom, Integer timestampTo) throws Exception {
         if (this.windows == null) { // Local caching
             DataFrame dataFrame = this.read(timestampFrom, timestampTo);
-            this.windows = WindowExtractor.detectWindows(dataFrame, this.windowThreshold, this.isMainsChannel);
+
+            WindowExtractor windowExtractor = new WindowExtractor();
+            this.windows = windowExtractor.detectWindows(dataFrame, this.windowThreshold);
         }
 
         return this.windows;
@@ -81,14 +80,6 @@ public class Channel {
     public Channel setWindowThreshold(Double threshold) {
         this.windowThreshold = threshold;
         return this;
-    }
-
-    public void setIsMainsChannel(Boolean isMainsChannel) {
-        this.isMainsChannel = isMainsChannel;
-    }
-
-    public Boolean isMainsChannel() {
-        return this.isMainsChannel;
     }
 
 }

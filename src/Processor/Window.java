@@ -13,8 +13,6 @@ public class Window {
 
     private ArrayList<Double> values;
 
-    private Boolean isIncreasing = null;
-
     private Double minValue;
 
     public Window() {
@@ -22,17 +20,6 @@ public class Window {
     }
 
     public void addValue(double value) {
-
-        if (this.isIncreasing == null) {
-            if (this.values.size() == 1) {
-                if (value - this.values.get(0) > 0) {
-                    this.setIncreasing(true);
-                } else {
-                    this.setIncreasing(false);
-                }
-            }
-        }
-
         if (this.minValue == null || value < this.minValue) {
             this.minValue = value;
         }
@@ -62,10 +49,6 @@ public class Window {
         }
     }
 
-    public Boolean isIncreasing() {
-        return this.isIncreasing;
-    }
-
     public Double calculateDistance(Window otherWindow) {
         ArrayList<Double> otherWindowValues = otherWindow.getValues();
 
@@ -82,23 +65,6 @@ public class Window {
         }
 
         return cache[this.values.size()-1][otherWindowValues.size()-1];
-    }
-
-    public Double getMinValue() {
-        return this.minValue;
-    }
-
-    public void close() {
-        int i = 0;
-        for (Iterator<Double> iterator = this.values.iterator(); iterator.hasNext();) {
-            Double value = iterator.next();
-            value -= this.minValue;
-            this.values.set(i, value);
-        }
-    }
-
-    private void setIncreasing(Boolean isIncreasing) {
-        this.isIncreasing = isIncreasing;
     }
 
     private double getMinOfVector(Vector<Double> vector) {

@@ -3,7 +3,8 @@ setwd("/home/gtakacs/fiit/bp/gnilm/data/house2/");
 
 loadChannel <- function(filename, data) {
   channelData <- read.table(filename, col.names=c('datetime', filename));
-  channelData$datetime <- as.POSIXct(channelData$datetime, origin="1970-01-01");
+  #channelData$datetime <- as.POSIXct(channelData$datetime, origin="1970-01-01");
+  channelData$datetime <- channelData$datetime;
   
   if (is.null(data)) {
     data <- channelData;
@@ -17,8 +18,8 @@ vizualize <- function(data, colors, dateFrom, dateTo) {
   print(dateTo);
   
   cols <- colnames(data);
-  dateFrom <- as.POSIXct(dateFrom, origin="1970-01-01");
-  dateTo <- as.POSIXct(dateTo, origin="1970-01-01");
+  #dateFrom <- as.POSIXct(dateFrom, origin="1970-01-01");
+  #dateTo <- as.POSIXct(dateTo, origin="1970-01-01");
   data <- subset(data, data$datetime > dateFrom & data$datetime < dateTo);
   
   myMax <- 0;
@@ -65,4 +66,4 @@ data <- loadChannel("refridgerator.dat", data); colors[["refridgerator.dat"]] <-
 data <- loadChannel("stove.dat", data); colors[["stove.dat"]] <- "cyan";
 data <- loadChannel("washer.dat", data); colors[["washer.dat"]] <- "orange";
 
-vizualize(data, colors, as.POSIXct(1303107507, origin="1970-01-01"), as.POSIXct(1303111107, origin="1970-01-01"));
+vizualize(data, colors, 1303132000, 1303133500);

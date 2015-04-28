@@ -39,14 +39,12 @@ public class Processor {
     }
 
     public void addTrainDataChannel(Channel channel) {
-        channel.setIsMainsChannel(false);
         this.trainDataChannels.add(channel);
     }
 
     public void detectEvents() throws Exception {
         // Detect mains windows
         Channel mainsChannel = house.getChannel("mains");
-        mainsChannel.setIsMainsChannel(true);
 
         // Detect channels windows
         ArrayList<Channel> channels = new ArrayList<Channel>();
@@ -74,11 +72,6 @@ public class Processor {
                 Channel currentChannel = channelIterator.next();
                 for (Iterator<Window> channelWindowsIterator = currentChannel.getWindows(this.trainDataFrom, this.trainDataTo).iterator(); channelWindowsIterator.hasNext();) {
                     Window currentChannelWindow = channelWindowsIterator.next();
-
-                    if (currentMainsWindow.isIncreasing() != currentChannelWindow.isIncreasing()) {
-                        continue;
-                    }
-
                     Double currentScore = currentMainsWindow.calculateDistance(currentChannelWindow);
 
                     skoreKanal += currentScore;
@@ -100,11 +93,6 @@ public class Processor {
 
             System.out.println("W: " + channelName + " @ " + timestamp + ", S: " + minScore);
 
-            if (winningWindow.isIncreasing()) {
-                System.out.println("UP");
-            } else {
-                System.out.println("DOWN");
-            }
 
             winningWindow.printData();
             System.out.println("* * *");
