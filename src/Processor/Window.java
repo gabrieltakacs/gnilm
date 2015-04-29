@@ -1,6 +1,7 @@
 package Processor;
 
 import java.util.ArrayList;
+import java.util.DoubleSummaryStatistics;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -65,6 +66,24 @@ public class Window {
         }
 
         return cache[this.values.size()-1][otherWindowValues.size()-1];
+    }
+
+    public void alterAllValues(Double alterValue) {
+        Integer index = 0;
+        for (Iterator<Double> iterator = this.values.iterator(); iterator.hasNext();) {
+            Double value = iterator.next();
+            value = value + alterValue;
+            this.values.set(index, value);
+            index++;
+        }
+    }
+
+    public Double getDeltaValue() {
+        Double firstValue = this.values.get(0);
+        Double lastValue = this.values.get(this.values.size() - 1);
+        Double delta = lastValue - firstValue;
+
+        return delta;
     }
 
     private double getMinOfVector(Vector<Double> vector) {
