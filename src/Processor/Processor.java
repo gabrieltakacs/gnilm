@@ -24,7 +24,7 @@ public class Processor {
 
     public Processor() {
         this.trainDataChannels = new ArrayList<Channel>();
-        this.initialConsumption = 0.0;
+        this.initialConsumption = null;
     }
 
     public void setTrainDataRange(Integer from, Integer to) {
@@ -35,10 +35,6 @@ public class Processor {
     public void setTestDataRange(Integer from, Integer to) {
         this.testDataFrom = from;
         this.testDataTo = to;
-    }
-
-    public void setInitialConsumption(Double value) {
-        this.initialConsumption = value;
     }
 
     public void setHouse(House house) {
@@ -60,7 +56,7 @@ public class Processor {
             channels.add(channel);
         }
 
-        Double currentConsumption = this.initialConsumption;
+        Double currentConsumption = this.getInitialConsumption();
         for (Iterator<Window> mainsWindowsIterator = mainsChannel.getWindows(this.testDataFrom, this.testDataTo).iterator(); mainsWindowsIterator.hasNext();) {
             Double minScore = null;
             String channelName = null;
@@ -95,7 +91,20 @@ public class Processor {
             System.out.println("W: " + channelName + " @ " + timestamp + ", S: " + minScore);
             System.out.println("* * *");
         }
+    }
 
+    private Double getInitialConsumption() {
+        if (this.initialConsumption == null) {
+            Double value = 0.0;
+
+            for (Iterator<Channel> iterator = this.trainDataChannels.iterator(); iterator.hasNext();) {
+                value += iterator.next().getInitialConsumption();
+            }
+
+            this.initialConsumption = value;
+        }
+
+        return this.initialConsumption;
     }
 
 }

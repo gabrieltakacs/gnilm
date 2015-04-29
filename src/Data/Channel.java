@@ -21,11 +21,14 @@ public class Channel {
 
     private Double windowThreshold;
 
+    private Double initialConsumption;
+
     public Channel(File file) {
         this.file = file;
         String name = file.getName().replaceFirst("[.][^.]+$", "");
         this.setName(name);
         this.setWindowThreshold(Configuration.defaultWindowThreshold);
+        this.initialConsumption = 0.0;
     }
 
     public String getName() {
@@ -80,6 +83,15 @@ public class Channel {
     public Channel setWindowThreshold(Double threshold) {
         this.windowThreshold = threshold;
         return this;
+    }
+
+    public Channel setInitialConsumption(Double value) {
+        this.initialConsumption = value;
+        return this;
+    }
+
+    public Double getInitialConsumption() {
+        return this.initialConsumption;
     }
 
 }
