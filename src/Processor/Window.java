@@ -60,7 +60,7 @@ public class Window {
                 tmp.add(this.getCacheElement(cache, i-1, j));
                 tmp.add(this.getCacheElement(cache, i-1, j-1));
                 tmp.add(this.getCacheElement(cache, i, j-1));
-                double d = Math.abs(this.values.get(i) - otherWindowValues.get(i)) + this.getMinOfVector(tmp);
+                double d = Math.abs(this.values.get(i) - otherWindowValues.get(j)) + this.getMinOfVector(tmp);
                 cache[i][j] = d;
             }
         }
