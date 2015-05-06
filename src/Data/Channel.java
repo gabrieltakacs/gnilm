@@ -3,10 +3,9 @@ package Data;
 import Configuration.Configuration;
 import Processor.Window;
 import Processor.WindowExtractor;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * Gabriel Takács, Apr 2015
@@ -17,18 +16,25 @@ public class Channel {
 
     private String name;
 
-    private ArrayList<Window> windows;
+    private ArrayList<Window> windows; // patterns
 
     private Double windowThreshold;
 
-    private Double initialConsumption;
+    private Integer currentTimestamp;
+    private Double currentValue;
+
+    private ArrayList<Window> associatedWindows;
+
+    private TreeMap<Integer, Double> reconstructedConsumption;
 
     public Channel(File file) {
         this.file = file;
         String name = file.getName().replaceFirst("[.][^.]+$", "");
         this.setName(name);
         this.setWindowThreshold(Configuration.defaultWindowThreshold);
-        this.initialConsumption = 0.0;
+        this.currentValue = 0.0;
+        this.reconstructedConsumption = new TreeMap<Integer, Double>();
+        this.associatedWindows = new ArrayList<Window>();
     }
 
     public String getName() {
@@ -85,13 +91,57 @@ public class Channel {
         return this;
     }
 
-    public Channel setInitialConsumption(Double value) {
-        this.initialConsumption = value;
+    public Channel setCurrentValue(Double value) {
+        this.currentValue = value;
         return this;
     }
 
-    public Double getInitialConsumption() {
-        return this.initialConsumption;
+    public Double getCurrentValue() {
+        return this.currentValue;
+    }
+
+    public void addAssociatedWindow(Window window) {
+        this.associatedWindows.add(window);
+        // Nasekam tam hodnoty merani z useku, ked sa nic nedialo
+        for (Integer i = this.currentTimestamp + 1; i < window.getTimestamp(); i++) {
+            this.reconstructedConsumption.put(i, this.currentValue);
+        }
+
+        // Prejdem kazdu hodnotu daneho okna, odcitam od nej "consumptionUnder" a opat nasekam do hodnot
+        Integer windowTimestamp = window.getTimestamp();
+        for (Iterator<Double> iterator = window.getValues().iterator(); iterator.hasNext();) {
+            Double value = iterator.next();
+            this.reconstructedConsumption.put(windowTimestamp, value);
+            this.currentTimestamp = windowTimestamp;
+            this.currentValue = value;
+
+            windowTimestamp++;
+        }
+    }
+
+    public void closeChannel(Integer timestamp) {
+        for (Integer i = this.currentTimestamp + 1; i < timestamp; i++) {
+            this.reconstructedConsumption.put(i, this.currentValue);
+        }
+    }
+
+    public void setCurrentTimestamp(Integer timestamp) {
+        this.currentTimestamp = timestamp;
+    }
+
+    public void test() {
+        for (Map.Entry<Integer, Double> entry : this.reconstructedConsumption.entrySet()) {
+            System.out.println(entry.getKey() + "\t" + entry.getValue());
+        }
+    }
+
+    public void exportToFile(String path) throws FileNotFoundException, UnsupportedEncodingException {
+        String fullPath = path + this.getName() + ".dat";
+        PrintWriter writer = new PrintWriter(fullPath, "UTF-8");
+        for (Map.Entry<Integer, Double> entry : this.reconstructedConsumption.entrySet()) {
+            writer.println(entry.getKey() + " " + entry.getValue());
+        }
+        writer.close();
     }
 
 }

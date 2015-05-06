@@ -1,8 +1,6 @@
-import Controllers.MainController;
 import Data.House;
 import DataLoader.ReddDataLoader.ReddDataLoader;
 import Processor.Processor;
-import Views.MainView;
 
 /**
  * Gabriel Takács, Mar 2015
@@ -24,15 +22,15 @@ public class Main {
             // Zla detekcia (house2): 1303107507, 1303111107
             Processor processor = new Processor();
             processor.setTrainDataRange(1303104700, 1303709500); // The first week
-            processor.setTestDataRange(1303140700, 1303144300);
+            processor.setTestDataRange(1303137100, 1303137200);
             processor.setHouse(house);
             processor.addTrainDataChannel(house.getChannel("kitchen1").setWindowThreshold(10.0));
             processor.addTrainDataChannel(house.getChannel("lighting").setWindowThreshold(10.0));
             processor.addTrainDataChannel(house.getChannel("stove").setWindowThreshold(10.0));
-            processor.addTrainDataChannel(house.getChannel("microwave").setWindowThreshold(10.0).setInitialConsumption(47.0));
-            processor.addTrainDataChannel(house.getChannel("washer").setWindowThreshold(10.0));
+            processor.addTrainDataChannel(house.getChannel("microwave").setWindowThreshold(10.0));
+            processor.addTrainDataChannel(house.getChannel("washer").setWindowThreshold(10.0).setCurrentValue(162.0));
             processor.addTrainDataChannel(house.getChannel("kitchen2").setWindowThreshold(10.0));
-            processor.addTrainDataChannel(house.getChannel("refridgerator").setWindowThreshold(10.0).setInitialConsumption(183.0));
+            processor.addTrainDataChannel(house.getChannel("refridgerator").setWindowThreshold(10.0).setCurrentValue(162.0));
             processor.addTrainDataChannel(house.getChannel("dishwasher").setWindowThreshold(10.0));
             processor.addTrainDataChannel(house.getChannel("disposal").setWindowThreshold(10.0));
 

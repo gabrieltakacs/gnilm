@@ -53,15 +53,19 @@ public class Processor {
         ArrayList<Channel> channels = new ArrayList<Channel>();
         for (Iterator<Channel> trainChannelsIterator = this.trainDataChannels.iterator(); trainChannelsIterator.hasNext();) { // Iterate over each channel
             Channel channel = trainChannelsIterator.next();
+            channel.setCurrentTimestamp(this.testDataFrom);
             channels.add(channel);
         }
 
+        // Calculate initial consumption
         Double currentConsumption = this.getInitialConsumption();
+        System.out.println("Initial consumption: " + currentConsumption);
+
         for (Iterator<Window> mainsWindowsIterator = mainsChannel.getWindows(this.testDataFrom, this.testDataTo).iterator(); mainsWindowsIterator.hasNext();) {
             Double minScore = null;
-            String channelName = null;
             Integer timestamp = null;
             Window winningWindow = null;
+            Channel winningChannel = null;
 
             Window currentMainsWindow = mainsWindowsIterator.next();
             System.out.println("Mains window @ " + currentMainsWindow.getTimestamp());
@@ -81,15 +85,23 @@ public class Processor {
 
                     if (minScore == null || currentScore < minScore) {
                         minScore = currentScore;
-                        channelName = currentChannel.getName();
+                        winningChannel = currentChannel;
                         timestamp = currentChannelWindow.getTimestamp();
                         winningWindow = currentChannelWindow;
                     }
                 }
             }
 
-            System.out.println("W: " + channelName + " @ " + timestamp + ", S: " + minScore);
+            System.out.println("W: " + winningChannel.getName() + " @ " + timestamp + ", S: " + minScore);
             System.out.println("* * *");
+
+            winningChannel.addAssociatedWindow(currentMainsWindow);
+        }
+
+        for (Iterator<Channel> iterator = this.trainDataChannels.iterator(); iterator.hasNext();) {
+            Channel channel = iterator.next();
+            channel.closeChannel(this.testDataTo);
+            channel.exportToFile("/home/gtakacs/fiit/bp/gnilm/data/export/house2/");
         }
     }
 
@@ -98,7 +110,7 @@ public class Processor {
             Double value = 0.0;
 
             for (Iterator<Channel> iterator = this.trainDataChannels.iterator(); iterator.hasNext();) {
-                value += iterator.next().getInitialConsumption();
+                value += iterator.next().getCurrentValue();
             }
 
             this.initialConsumption = value;
