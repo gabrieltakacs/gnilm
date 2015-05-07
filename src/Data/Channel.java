@@ -106,17 +106,37 @@ public class Channel {
         for (Integer i = this.currentTimestamp + 1; i < window.getTimestamp(); i++) {
             this.reconstructedConsumption.put(i, this.currentValue);
         }
+//        System.out.println("X: " + this.currentValue);
 
         // Prejdem kazdu hodnotu daneho okna, odcitam od nej "consumptionUnder" a opat nasekam do hodnot
         Integer windowTimestamp = window.getTimestamp();
+        Integer index = 0;
         for (Iterator<Double> iterator = window.getValues().iterator(); iterator.hasNext();) {
-            Double value = iterator.next();
+
+            Double mainsWindowValue = iterator.next();
+            Double value = this.currentValue;
+            if (iterator.hasNext()) {
+                Double nextMainsWindowValue = window.getValues().get(index + 1);
+                Double diferencia = nextMainsWindowValue - mainsWindowValue;
+                value = this.currentValue + diferencia;
+            }
+
+            if (value < 0.0) {
+                value = 0.0;
+            }
+
             this.reconstructedConsumption.put(windowTimestamp, value);
             this.currentTimestamp = windowTimestamp;
             this.currentValue = value;
 
+            if (this.getName().equals("refridgerator")) {
+//                System.out.println("Y: " + value);
+            }
+
             windowTimestamp++;
+            index++;
         }
+
     }
 
     public void closeChannel(Integer timestamp) {

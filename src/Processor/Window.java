@@ -1,7 +1,6 @@
 package Processor;
 
 import java.util.ArrayList;
-import java.util.DoubleSummaryStatistics;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -53,6 +52,10 @@ public class Window {
     public Double calculateDistance(Window otherWindow) {
         ArrayList<Double> otherWindowValues = otherWindow.getValues();
 
+//        System.out.println("DTW CALLED");
+//        System.out.println(this.values);
+//        System.out.println(otherWindowValues);
+
         double cache[][] = new double[this.values.size()][otherWindowValues.size()];
         for (int i = 1; i < this.values.size(); i++) {
             for (int j = 1; j < otherWindowValues.size(); j++) {
@@ -84,6 +87,25 @@ public class Window {
         Double delta = lastValue - firstValue;
 
         return delta;
+    }
+
+    public Boolean isIncreasing() {
+        Double deltaValue = this.getDeltaValue();
+        Boolean isIncreasing = false;
+        if (deltaValue > 0.0) {
+            isIncreasing = true;
+        }
+
+        return isIncreasing;
+    }
+
+    public void postProcess() {
+        Integer index = 0;
+        for (Iterator<Double> iterator = this.values.iterator(); iterator.hasNext();) {
+            Double value = iterator.next();
+//            this.values.set(index, value - this.minValue);
+            index++;
+        }
     }
 
     private double getMinOfVector(Vector<Double> vector) {

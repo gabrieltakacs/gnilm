@@ -59,7 +59,7 @@ public class Processor {
 
         // Calculate initial consumption
         Double currentConsumption = this.getInitialConsumption();
-        System.out.println("Initial consumption: " + currentConsumption);
+//        System.out.println("Initial consumption: " + currentConsumption);
 
         for (Iterator<Window> mainsWindowsIterator = mainsChannel.getWindows(this.testDataFrom, this.testDataTo).iterator(); mainsWindowsIterator.hasNext();) {
             Double minScore = null;
@@ -67,21 +67,39 @@ public class Processor {
             Window winningWindow = null;
             Channel winningChannel = null;
 
+            Double najlepsiPriemer = null;
+            Channel najlepsiPriemerKanal = null;
+
             Window currentMainsWindow = mainsWindowsIterator.next();
             System.out.println("Mains window @ " + currentMainsWindow.getTimestamp());
+
+//            currentMainsWindow.alterAllValues((-1) * currentConsumption);
+            currentConsumption += currentMainsWindow.getDeltaValue();
+//            System.out.println("Spotreba: " + currentConsumption);
             currentMainsWindow.printData();
 
-            currentMainsWindow.alterAllValues((-1) * currentConsumption);
-            currentConsumption += currentMainsWindow.getDeltaValue();
-
             for (Iterator<Channel> channelIterator = channels.iterator(); channelIterator.hasNext();) {
+
+                Double sumaNaKanal = 0.0;
+                Integer pocetMeraniNaKanal = 0;
 
                 Channel currentChannel = channelIterator.next();
                 for (Iterator<Window> channelWindowsIterator = currentChannel.getWindows(this.trainDataFrom, this.trainDataTo).iterator(); channelWindowsIterator.hasNext();) {
                     Window currentChannelWindow = channelWindowsIterator.next();
+
+                    if (!currentChannelWindow.isIncreasing().equals(currentMainsWindow.isIncreasing())) {
+                        continue;
+                    }
+
+                    Double mainsDelta = currentMainsWindow.getDeltaValue();
+                    Double channelDelta = currentChannelWindow.getDeltaValue();
+                    Double deltaOfDeltas = Math.abs(mainsDelta - channelDelta);
+
                     Double currentScore = currentMainsWindow.calculateDistance(currentChannelWindow);
 
-//                    System.out.println(currentChannel.getName() + " @ " + currentChannelWindow.getTimestamp() + "\t" + currentScore.toString());
+                    currentScore += 10 * deltaOfDeltas;
+
+                    System.out.println(currentChannel.getName() + " @ " + currentChannelWindow.getTimestamp() + "\t" + currentScore.toString() + "\tDD: " + deltaOfDeltas + " M:" + mainsDelta + " C: " + channelDelta);
 
                     if (minScore == null || currentScore < minScore) {
                         minScore = currentScore;
@@ -89,11 +107,26 @@ public class Processor {
                         timestamp = currentChannelWindow.getTimestamp();
                         winningWindow = currentChannelWindow;
                     }
+
+                    sumaNaKanal += currentScore;
+                    pocetMeraniNaKanal++;
+                }
+
+                Double priemerNaKanal = sumaNaKanal / pocetMeraniNaKanal;
+                if (pocetMeraniNaKanal >= 10) {
+//                    System.out.println("Kanal " + currentChannel.getName() + ", priemer: " + priemerNaKanal + "(" + pocetMeraniNaKanal + ")");
+
+                    if (najlepsiPriemer == null || priemerNaKanal < najlepsiPriemer) {
+                        najlepsiPriemer = priemerNaKanal;
+                        najlepsiPriemerKanal = currentChannel;
+                    }
                 }
             }
 
-            System.out.println("W: " + winningChannel.getName() + " @ " + timestamp + ", S: " + minScore);
-            System.out.println("* * *");
+//            System.out.println("W: " + winningChannel.getName() + " @ " + timestamp + ", S: " + minScore);
+//            System.out.println("W(priemer): " + najlepsiPriemer + " (" + najlepsiPriemerKanal.getName() + ")");
+//            System.out.println("* * *");
+//            winningWindow.printData();
 
             winningChannel.addAssociatedWindow(currentMainsWindow);
         }

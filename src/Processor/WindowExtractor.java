@@ -71,6 +71,7 @@ public class WindowExtractor {
 
     private void addWindow(Window window) {
         if (window != null && window.getValues().size() > 2) {
+            window.postProcess();
             this.windows.add(window);
         }
     }

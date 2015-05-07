@@ -1,12 +1,12 @@
 rm(list=ls());
 setwd("/home/gtakacs/fiit/bp/gnilm/data/export/house2/");
 
-loadChannel <- function(filename) {
+loadChannelForCompare <- function(filename) {
   channelData <- read.table(filename, col.names=c('datetime', 'value'));  
   return(channelData);
 }
 
-compare <- function(originalData, generatedData) {    
+compare <- function(originalData, generatedData, label) {    
   minTimestamp <- min(generatedData['datetime']);
   maxTimestamp <- max(generatedData['datetime']);
   originalData <- subset(originalData, originalData$datetime >= minTimestamp & originalData$datetime <= maxTimestamp);
@@ -19,13 +19,12 @@ compare <- function(originalData, generatedData) {
   minValueGen <- min(generatedData['value']);
   minValue <- min(c(minValueOrig, minValueGen, 0));
   
-  plot(originalData$datetime, as.vector(originalData[['value']]), col="red", type="l", xlab="Time", ylim=c(minValue, maxValue), ylab="Consumption (W)", main="Energy Consumption (House 2)")
+  plot(originalData$datetime, as.vector(originalData[['value']]), col="red", type="l", xlab="Time", ylim=c(minValue, maxValue), ylab="Consumption (W)", main=label)
   lines(generatedData$datetime, as.vector(generatedData[['value']]), col="blue");
   
-  #legend("topright", inset = c(-0.0, 0), fill=legendColorsList, title="Channels", x.intersp=0.2, legend=legendChannelsList, cex=0.6, xpd=T)
+  legend("topleft", inset = c(-0.0, 0), fill=c("red", "blue"), x.intersp=0.2, legend=c("Original", "Generated"), cex=0.6, xpd=T)
 }
 
-originalData <- loadChannel("/home/gtakacs/fiit/bp/gnilm/data/house2/kitchen2.dat"); 
-generatedData <- loadChannel("/home/gtakacs/fiit/bp/gnilm/data/export/house2/kitchen2.dat"); 
-
-compare(originalData, generatedData);
+originalData <- loadChannelForCompare("/home/gtakacs/fiit/bp/gnilm/data/house2/dishwasher.dat"); 
+generatedData <- loadChannelForCompare("/home/gtakacs/fiit/bp/gnilm/data/export/house2/dishwasher.dat"); 
+compare(originalData, generatedData, "Dishwasher (House 2)");
