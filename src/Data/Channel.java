@@ -164,4 +164,8 @@ public class Channel {
         writer.close();
     }
 
+    public TreeMap<Integer, Double> getReconstructedConsumption() {
+        return this.reconstructedConsumption;
+    }
+
 }

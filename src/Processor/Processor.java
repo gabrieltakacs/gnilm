@@ -99,7 +99,7 @@ public class Processor {
 
                     currentScore += 10 * deltaOfDeltas;
 
-                    System.out.println(currentChannel.getName() + " @ " + currentChannelWindow.getTimestamp() + "\t" + currentScore.toString() + "\tDD: " + deltaOfDeltas + " M:" + mainsDelta + " C: " + channelDelta);
+//                    System.out.println(currentChannel.getName() + " @ " + currentChannelWindow.getTimestamp() + "\t" + currentScore.toString() + "\tDD: " + deltaOfDeltas + " M:" + mainsDelta + " C: " + channelDelta);
 
                     if (minScore == null || currentScore < minScore) {
                         minScore = currentScore;
