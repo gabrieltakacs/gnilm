@@ -1,14 +1,13 @@
 package Processor;
 
+import Controllers.MainController;
 import Data.Channel;
 import Data.House;
+import Models.ModelAbstract;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * Gabriel Takács, Apr 2015
- */
-public class Processor {
+public class Processor extends ModelAbstract {
 
     private Integer trainDataFrom;
     private Integer trainDataTo;
@@ -22,7 +21,8 @@ public class Processor {
 
     private Double initialConsumption;
 
-    public Processor() {
+    public Processor(MainController controller) {
+        super(controller);
         this.trainDataChannels = new ArrayList<Channel>();
         this.initialConsumption = null;
     }
@@ -67,15 +67,11 @@ public class Processor {
             Window winningWindow = null;
             Channel winningChannel = null;
 
-            Double najlepsiPriemer = null;
-            Channel najlepsiPriemerKanal = null;
-
             Window currentMainsWindow = mainsWindowsIterator.next();
-            System.out.println("Mains window @ " + currentMainsWindow.getTimestamp());
 
-//            currentMainsWindow.alterAllValues((-1) * currentConsumption);
+            this.controller.addLineToDisaggregationOutput("Mains window detected @ " + currentMainsWindow.getTimestamp(), true);
+
             currentConsumption += currentMainsWindow.getDeltaValue();
-//            System.out.println("Spotreba: " + currentConsumption);
             currentMainsWindow.printData();
 
             for (Iterator<Channel> channelIterator = channels.iterator(); channelIterator.hasNext();) {
@@ -116,18 +112,10 @@ public class Processor {
                 if (pocetMeraniNaKanal >= 10) {
 //                    System.out.println("Kanal " + currentChannel.getName() + ", priemer: " + priemerNaKanal + "(" + pocetMeraniNaKanal + ")");
 
-                    if (najlepsiPriemer == null || priemerNaKanal < najlepsiPriemer) {
-                        najlepsiPriemer = priemerNaKanal;
-                        najlepsiPriemerKanal = currentChannel;
-                    }
                 }
             }
 
             System.out.println("W: " + winningChannel.getName() + " @ " + timestamp + ", S: " + minScore);
-//            System.out.println("W(priemer): " + najlepsiPriemer + " (" + najlepsiPriemerKanal.getName() + ")");
-//            System.out.println("* * *");
-//            winningWindow.printData();
-
             winningChannel.addAssociatedWindow(currentMainsWindow);
         }
 

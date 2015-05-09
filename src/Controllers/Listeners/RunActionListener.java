@@ -1,23 +1,21 @@
-import Controllers.MainController;
-import Views.MainView;
+package Controllers.Listeners;
 
-public class Main {
+import Data.House;
+import DataLoader.ReddDataLoader.ReddDataLoader;
+import java.awt.event.ActionEvent;
+import Processor.Processor;
 
-    public static void main(String[] args) {
+public class RunActionListener extends ActionListenerGeneral {
 
-        MainView mainView = new MainView();
-        new MainController(mainView);
-
-        /*
+    @Override
+    public void actionPerformed(ActionEvent e) {
         ReddDataLoader dataLoader = new ReddDataLoader();
 
         try {
             dataLoader.setBaseDirectory("/home/gtakacs/fiit/bp/gnilm/data/");
             House house = dataLoader.getHouse("house2");
 
-            // Safe: 1303129329, 1303136529
-            // Zla detekcia (house2): 1303107507, 1303111107
-            Processor processor = new Processor();
+            Processor processor = new Processor(this.controller);
             processor.setTrainDataRange(1303082307, 1303709500); // The first week (1303082307, 1303709500)
             processor.setTestDataRange(1303139500, 1303140500);
             processor.setHouse(house);
@@ -32,17 +30,9 @@ public class Main {
             processor.addTrainDataChannel(house.getChannel("disposal").setWindowThreshold(10.0));
 
             processor.detectEvents();
-
-            Channel theChannel = house.getChannel("dishwasher");
-
-            Recommender recommender = new Recommender();
-            recommender.generateRecommendations(theChannel);
-
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
         }
-        */
-    }
 
+    }
 }
