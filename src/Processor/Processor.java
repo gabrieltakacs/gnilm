@@ -123,7 +123,7 @@ public class Processor {
                 }
             }
 
-//            System.out.println("W: " + winningChannel.getName() + " @ " + timestamp + ", S: " + minScore);
+            System.out.println("W: " + winningChannel.getName() + " @ " + timestamp + ", S: " + minScore);
 //            System.out.println("W(priemer): " + najlepsiPriemer + " (" + najlepsiPriemerKanal.getName() + ")");
 //            System.out.println("* * *");
 //            winningWindow.printData();

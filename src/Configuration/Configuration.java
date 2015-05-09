@@ -7,8 +7,8 @@ public class Configuration {
 
     public static final double defaultWindowThreshold = 10.0;
 
-    public static final String highTariffZoneFrom = "0:00";
+    public static final String highTariffZoneFrom = "6:00";
 
-    public static final String highTariffZoneUntil = "23:59";
+    public static final String highTariffZoneUntil = "22:00";
 
 }
