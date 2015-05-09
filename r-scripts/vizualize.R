@@ -13,7 +13,7 @@ loadChannel <- function(filename, data) {
   }  
 }
 
-vizualize <- function(data, colors, dateFrom, dateTo) {  
+vizualize <- function(data, colors, dateFrom, dateTo, displayOnly=c()) {  
   print(dateFrom);
   print(dateTo);
   
@@ -24,23 +24,30 @@ vizualize <- function(data, colors, dateFrom, dateTo) {
   
   myMax <- 0;
   for (col in cols) {
-    if (col != 'datetime') {
+    if (col != 'datetime' & (length(displayOnly) == 0 | col %in% displayOnly)) {
       currentMax <- max(data[[col]]);
       if (currentMax > myMax) {
         myMax <- currentMax;
       }  
-    }  
+    } 
   }
   
-  colorsList <- NULL;
+  legendColorsList <- NULL;
+  legendChannelsList <- NULL;
   plot(data$datetime, as.vector(data[['mains.dat']]), col=colors[['mains.dat']], type="l", xlab="Time", xlim=c(dateFrom, dateTo), ylim=c(0,myMax), ylab="Consumption (W)", main="Energy Consumption (House 2)");
   for (col in cols) {
-    if (col != 'mains' && col != 'datetime') {
+    if (col != 'mains' && col != 'datetime' & (length(displayOnly) == 0 | col %in% displayOnly)) {
       lines(data$datetime, as.vector(data[[col]]), col=colors[[col]]);
-    }  
+    }
+    
+    if (col != 'datetime') {
+      legendChannelsList[length(legendChannelsList) + 1] <- col;
+    }
+    
+    legendColorsList[length(legendColorsList) + 1] <- colors[[col]]; 
   }
   
-  legend("topright", inset = c(-0.1, 0), fill=colors, title="Channels", x.intersp=0.2, legend=cols, cex=0.6, xpd=T)
+  legend("topright", inset = c(-0.0, 0), fill=legendColorsList, title="Channels", x.intersp=0.2, legend=legendChannelsList, cex=0.6, xpd=T)
 }
 
 data <- NULL;
@@ -69,4 +76,6 @@ data <- loadChannel("refridgerator.dat", data); colors[["refridgerator.dat"]] <-
 data <- loadChannel("stove.dat", data); colors[["stove.dat"]] <- "cyan";
 data <- loadChannel("washer.dat", data); colors[["washer.dat"]] <- "orange";
 
-vizualize(data, colors, 1303137100, 1303140700);
+vizualize(data, colors, 1303139500, 1303140500, c());
+vizualize(data, colors, 1303687107, 1303730307, c("washer.dat", "dishwasher.dat", "stove.dat"));
+

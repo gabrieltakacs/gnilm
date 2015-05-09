@@ -25,6 +25,6 @@ compare <- function(originalData, generatedData, label) {
   legend("topleft", inset = c(-0.0, 0), fill=c("red", "blue"), x.intersp=0.2, legend=c("Original", "Generated"), cex=0.6, xpd=T)
 }
 
-originalData <- loadChannelForCompare("/home/gtakacs/fiit/bp/gnilm/data/house2/dishwasher.dat"); 
-generatedData <- loadChannelForCompare("/home/gtakacs/fiit/bp/gnilm/data/export/house2/dishwasher.dat"); 
-compare(originalData, generatedData, "Dishwasher (House 2)");
+originalData <- loadChannelForCompare("/home/gtakacs/fiit/bp/gnilm/data/house2/microwave.dat"); 
+generatedData <- loadChannelForCompare("/home/gtakacs/fiit/bp/gnilm/data/export/house2/microwave.dat"); 
+compare(originalData, generatedData, "Microwave (House 2)");
