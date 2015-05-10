@@ -1,6 +1,6 @@
 package Controllers;
 
-import Controllers.Listeners.RunActionListener;
+import Controllers.Listeners.RunDialogActionListener;
 import Views.MainView;
 
 public class MainController extends ControllerAbstract {
@@ -11,7 +11,7 @@ public class MainController extends ControllerAbstract {
         this.view = view;
         this.view.setVisible(true);
 
-        view.bindRunActionListener(new RunActionListener().setController(this));
+        view.bindRunActionListener(new RunDialogActionListener().setController(this));
     }
 
     public void addLineToDisaggregationOutput(String line, boolean logToConsole) {

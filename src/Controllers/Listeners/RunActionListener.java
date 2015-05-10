@@ -1,24 +1,21 @@
 package Controllers.Listeners;
 
+import Configuration.Configuration;
+import Data.DataFactory;
 import Data.House;
-import DataLoader.ReddDataLoader.ReddDataLoader;
-import java.awt.event.ActionEvent;
 import Processor.Processor;
+import java.awt.event.ActionEvent;
 
-public class RunActionListener extends ActionListenerGeneral {
+public class RunActionListener extends ActionListenerAbstract {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ReddDataLoader dataLoader = new ReddDataLoader();
-
         try {
-            dataLoader.setBaseDirectory("/home/gtakacs/fiit/bp/gnilm/data/");
-            House house = dataLoader.getHouse("house2");
+            House house = DataFactory.getHouse(Configuration.getInstance().getInputDirectory());
 
             Processor processor = new Processor(this.controller);
-            processor.setTrainDataRange(1303082307, 1303709500);
-            processor.setTestDataRange(1303139500, 1303140500);
-            processor.setHouse(house);
+
+            // TODO: toto treba presunut do processoru
             processor.addTrainDataChannel(house.getChannel("kitchen1").setWindowThreshold(10.0));
             processor.addTrainDataChannel(house.getChannel("lighting").setWindowThreshold(10.0));
             processor.addTrainDataChannel(house.getChannel("stove").setWindowThreshold(10.0));
@@ -28,11 +25,9 @@ public class RunActionListener extends ActionListenerGeneral {
             processor.addTrainDataChannel(house.getChannel("refridgerator").setWindowThreshold(10.0));
             processor.addTrainDataChannel(house.getChannel("dishwasher").setWindowThreshold(10.0).setCurrentValue(1205.67));
             processor.addTrainDataChannel(house.getChannel("disposal").setWindowThreshold(10.0));
-
             processor.detectEvents();
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
         }
-
     }
 }

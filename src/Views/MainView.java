@@ -88,8 +88,6 @@ public class MainView extends JFrame {
         menuSettings.add(menuSettingsDisaggregation);
 
         menuBar.add(menuSettings);
-
-
         menuBar.setVisible(true);
         setJMenuBar(menuBar);
     }

@@ -3,6 +3,7 @@ package Processor;
 import Configuration.Configuration;
 import Controllers.MainController;
 import Data.Channel;
+import Data.DataFactory;
 import Data.House;
 import Models.ModelAbstract;
 import java.util.ArrayList;
@@ -20,20 +21,20 @@ public class Processor extends ModelAbstract {
     public Processor(MainController controller) {
         super(controller);
         this.trainDataChannels = new ArrayList<Channel>();
-    }
 
-    public void setTrainDataRange(Integer from, Integer to) {
-        this.trainDataFrom = from;
-        this.trainDataTo = to;
-    }
+        Configuration configuration = Configuration.getInstance();
+        this.trainDataFrom = configuration.getTrainDataRangeFrom();
+        this.trainDataTo = configuration.getTrainDataRangeUntil();
 
-    public void setTestDataRange(Integer from, Integer to) {
-        this.testDataFrom = from;
-        this.testDataTo = to;
-    }
+        this.testDataFrom = configuration.getTestDataRangeFrom();
+        this.testDataTo = configuration.getTestDataRangeUntil();
 
-    public void setHouse(House house) {
-        this.house = house;
+        try {
+            this.house = DataFactory.getHouse(configuration.getInputDirectory());
+        } catch (Exception exception) {
+            // TODO: implement
+        }
+
     }
 
     public void addTrainDataChannel(Channel channel) {
@@ -58,7 +59,6 @@ public class Processor extends ModelAbstract {
             Channel winningChannel = null;
 
             Window currentMainsWindow = mainsWindowsIterator.next();
-
             this.controller.addLineToDisaggregationOutput("Event @ " + currentMainsWindow.getTimestamp(), true);
 
             for (Iterator<Channel> channelIterator = channels.iterator(); channelIterator.hasNext();) {
@@ -93,6 +93,7 @@ public class Processor extends ModelAbstract {
             this.controller.addLineToLog("Winning window @ " + timestamp);
             this.controller.addLineToLog("Final score: " + minScore);
             this.controller.addLineToLog("");
+
 
             winningChannel.addAssociatedWindow(currentMainsWindow);
         }
