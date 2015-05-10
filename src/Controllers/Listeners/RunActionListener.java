@@ -1,10 +1,15 @@
 package Controllers.Listeners;
 
 import Configuration.Configuration;
+import Data.Channel;
 import Data.DataFactory;
 import Data.House;
 import Processor.Processor;
+import Recommender.Recommender;
+
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class RunActionListener extends ActionListenerAbstract {
 
@@ -26,6 +31,14 @@ public class RunActionListener extends ActionListenerAbstract {
             processor.addTrainDataChannel(house.getChannel("dishwasher").setWindowThreshold(10.0).setCurrentValue(1205.67));
             processor.addTrainDataChannel(house.getChannel("disposal").setWindowThreshold(10.0));
             processor.detectEvents();
+
+            ArrayList<Channel> applianceChannels = processor.getApplianceChannels();
+            Recommender recommender = new Recommender();
+            recommender.setController(this.controller);
+            for (Iterator<Channel> iterator = applianceChannels.iterator(); iterator.hasNext();) {
+                recommender.generateRecommendations(iterator.next());
+            }
+
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
         }

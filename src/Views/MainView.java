@@ -10,9 +10,9 @@ public class MainView extends JFrame {
 
     private JPanel rootPanel;
     private JTabbedPane tabbedPane;
-    private JScrollBar scrollBar1;
     private JTextArea disaggregationOutput;
     private JTextArea logTextArea;
+    private JTextArea energyCalculatorOutput;
 
     // Menu components
     private JMenuBar menuBar;
@@ -43,8 +43,8 @@ public class MainView extends JFrame {
         this.disaggregationOutput.append(line);
     }
 
-    public void addLineToRecommendationsOutput(String line) {
-
+    public void addLineToEnergyCalculatorOutput(String line) {
+        this.energyCalculatorOutput.append(line);
     }
 
     public void addLineToLog(String line) {

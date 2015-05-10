@@ -23,7 +23,7 @@ public class MainController extends ControllerAbstract {
     }
 
     public void addLineToEnergyCalculatorOutput(String line, boolean logToConsole) {
-        this.view.addLineToRecommendationsOutput(line + "\n");
+        this.view.addLineToEnergyCalculatorOutput(line + "\n");
 
         if (logToConsole) {
             this.addLineToLog(line);

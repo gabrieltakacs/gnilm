@@ -105,4 +105,8 @@ public class Processor extends ModelAbstract {
         }
     }
 
+    public ArrayList<Channel> getApplianceChannels() {
+        return this.trainDataChannels;
+    }
+
 }
