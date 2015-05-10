@@ -1,6 +1,7 @@
 package Controllers;
 
 import Controllers.Listeners.RunDialogActionListener;
+import Utils.Log;
 import Views.MainView;
 
 public class MainController extends ControllerAbstract {
@@ -10,6 +11,8 @@ public class MainController extends ControllerAbstract {
     public MainController(MainView view) {
         this.view = view;
         this.view.setVisible(true);
+
+        Log.getInstance().setController(this);
 
         view.bindRunActionListener(new RunDialogActionListener().setController(this));
     }

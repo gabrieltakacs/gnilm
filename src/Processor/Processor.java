@@ -101,7 +101,7 @@ public class Processor extends ModelAbstract {
         for (Iterator<Channel> iterator = this.trainDataChannels.iterator(); iterator.hasNext();) {
             Channel channel = iterator.next();
             channel.closeChannel(this.testDataTo);
-            channel.exportToFile("/home/gtakacs/fiit/bp/gnilm/data/export/house2/");
+            channel.exportToFile(Configuration.getInstance().getInputDirectory());
         }
     }
 

@@ -3,6 +3,8 @@ package Data;
 import Configuration.Configuration;
 import Processor.Window;
 import Processor.WindowExtractor;
+import Utils.Log;
+
 import java.io.*;
 import java.util.*;
 
@@ -141,12 +143,14 @@ public class Channel {
     }
 
     public void exportToFile(String path) throws FileNotFoundException, UnsupportedEncodingException {
-        String fullPath = path + this.getName() + ".dat";
+        String fullPath = path + "/" + this.getName() + ".gnilm.dat";
         PrintWriter writer = new PrintWriter(fullPath, "UTF-8");
         for (Map.Entry<Integer, Double> entry : this.reconstructedConsumption.entrySet()) {
             writer.println(entry.getKey() + " " + entry.getValue());
         }
         writer.close();
+
+        Log.getInstance().log("Disaggregated channel " + this.getName() + " saved to: " + fullPath);
     }
 
     public TreeMap<Integer, Double> getReconstructedConsumption() {
