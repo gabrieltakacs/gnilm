@@ -4,9 +4,6 @@ import Data.DataFrame;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * Gabriel Takács, Apr 2015
- */
 public class WindowExtractor {
 
     private ArrayList<Window> windows;
@@ -71,7 +68,6 @@ public class WindowExtractor {
 
     private void addWindow(Window window) {
         if (window != null && window.getValues().size() > 2) {
-            window.postProcess();
             this.windows.add(window);
         }
     }

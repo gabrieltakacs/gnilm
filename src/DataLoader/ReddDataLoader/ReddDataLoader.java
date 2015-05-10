@@ -6,9 +6,6 @@ import DataLoader.DataLoaderInterface;
 import java.io.File;
 import java.util.ArrayList;
 
-/**
- * Gabriel Takács, Apr 2015
- */
 public class ReddDataLoader extends DataLoaderAbstract implements DataLoaderInterface {
 
     @Override

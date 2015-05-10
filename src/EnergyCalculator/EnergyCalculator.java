@@ -2,8 +2,6 @@ package EnergyCalculator;
 
 import Data.Channel;
 import Utils.TimeUtils;
-
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 

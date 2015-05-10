@@ -4,9 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * Gabriel Takács, Apr 2015
- */
 public class House {
 
     private File baseDirectory;

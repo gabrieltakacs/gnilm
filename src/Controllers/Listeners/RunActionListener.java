@@ -16,7 +16,7 @@ public class RunActionListener extends ActionListenerGeneral {
             House house = dataLoader.getHouse("house2");
 
             Processor processor = new Processor(this.controller);
-            processor.setTrainDataRange(1303082307, 1303709500); // The first week (1303082307, 1303709500)
+            processor.setTrainDataRange(1303082307, 1303709500);
             processor.setTestDataRange(1303139500, 1303140500);
             processor.setHouse(house);
             processor.addTrainDataChannel(house.getChannel("kitchen1").setWindowThreshold(10.0));

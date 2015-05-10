@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 
-/**
- * Gabriel Takács, Apr 2015
- */
 public class Window {
 
     private Integer timestamp;
@@ -39,22 +36,8 @@ public class Window {
         return this.timestamp;
     }
 
-    public void printInfo() {
-        System.out.println("* Window @ " + this.timestamp + ", length: " + this.values.size());
-    }
-
-    public void printData() {
-        for (Iterator<Double> iterator = this.values.iterator(); iterator.hasNext();) {
-            System.out.println(iterator.next());
-        }
-    }
-
     public Double calculateDistance(Window otherWindow) {
         ArrayList<Double> otherWindowValues = otherWindow.getValues();
-
-//        System.out.println("DTW CALLED");
-//        System.out.println(this.values);
-//        System.out.println(otherWindowValues);
 
         double cache[][] = new double[this.values.size()][otherWindowValues.size()];
         for (int i = 1; i < this.values.size(); i++) {
@@ -69,16 +52,6 @@ public class Window {
         }
 
         return cache[this.values.size()-1][otherWindowValues.size()-1];
-    }
-
-    public void alterAllValues(Double alterValue) {
-        Integer index = 0;
-        for (Iterator<Double> iterator = this.values.iterator(); iterator.hasNext();) {
-            Double value = iterator.next();
-            value = value + alterValue;
-            this.values.set(index, value);
-            index++;
-        }
     }
 
     public Double getDeltaValue() {
@@ -97,15 +70,6 @@ public class Window {
         }
 
         return isIncreasing;
-    }
-
-    public void postProcess() {
-        Integer index = 0;
-        for (Iterator<Double> iterator = this.values.iterator(); iterator.hasNext();) {
-            Double value = iterator.next();
-//            this.values.set(index, value - this.minValue);
-            index++;
-        }
     }
 
     private double getMinOfVector(Vector<Double> vector) {

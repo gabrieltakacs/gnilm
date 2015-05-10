@@ -1,8 +1,5 @@
 package Data;
 
-/**
- * Gabriel Takács, Mar 2015
- */
 public class DataRow {
 
     private Integer timestamp;

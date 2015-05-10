@@ -3,20 +3,16 @@ package Data;
 import Configuration.Configuration;
 import Processor.Window;
 import Processor.WindowExtractor;
-
 import java.io.*;
 import java.util.*;
 
-/**
- * Gabriel Takács, Apr 2015
- */
 public class Channel {
 
     private File file;
 
     private String name;
 
-    private ArrayList<Window> windows; // patterns
+    private ArrayList<Window> windows;
 
     private Double windowThreshold;
 
@@ -31,7 +27,7 @@ public class Channel {
         this.file = file;
         String name = file.getName().replaceFirst("[.][^.]+$", "");
         this.setName(name);
-        this.setWindowThreshold(Configuration.defaultWindowThreshold);
+        this.setWindowThreshold(Configuration.getInstance().getDefaultEventDetectionThreshold());
         this.currentValue = 0.0;
         this.reconstructedConsumption = new TreeMap<Integer, Double>();
         this.associatedWindows = new ArrayList<Window>();
@@ -106,7 +102,6 @@ public class Channel {
         for (Integer i = this.currentTimestamp + 1; i < window.getTimestamp(); i++) {
             this.reconstructedConsumption.put(i, this.currentValue);
         }
-//        System.out.println("X: " + this.currentValue);
 
         // Prejdem kazdu hodnotu daneho okna, odcitam od nej "consumptionUnder" a opat nasekam do hodnot
         Integer windowTimestamp = window.getTimestamp();
@@ -117,8 +112,8 @@ public class Channel {
             Double value = this.currentValue;
             if (iterator.hasNext()) {
                 Double nextMainsWindowValue = window.getValues().get(index + 1);
-                Double diferencia = nextMainsWindowValue - mainsWindowValue;
-                value = this.currentValue + diferencia;
+                Double diff = nextMainsWindowValue - mainsWindowValue;
+                value = this.currentValue + diff;
             }
 
             if (value < 0.0) {
@@ -128,10 +123,6 @@ public class Channel {
             this.reconstructedConsumption.put(windowTimestamp, value);
             this.currentTimestamp = windowTimestamp;
             this.currentValue = value;
-
-            if (this.getName().equals("refridgerator")) {
-//                System.out.println("Y: " + value);
-            }
 
             windowTimestamp++;
             index++;
@@ -147,12 +138,6 @@ public class Channel {
 
     public void setCurrentTimestamp(Integer timestamp) {
         this.currentTimestamp = timestamp;
-    }
-
-    public void test() {
-        for (Map.Entry<Integer, Double> entry : this.reconstructedConsumption.entrySet()) {
-            System.out.println(entry.getKey() + "\t" + entry.getValue());
-        }
     }
 
     public void exportToFile(String path) throws FileNotFoundException, UnsupportedEncodingException {

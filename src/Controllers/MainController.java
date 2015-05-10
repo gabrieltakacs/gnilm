@@ -15,7 +15,7 @@ public class MainController extends ControllerAbstract {
     }
 
     public void addLineToDisaggregationOutput(String line, boolean logToConsole) {
-        this.view.addLineToDisaggregationOutput(line);
+        this.view.addLineToDisaggregationOutput(line + "\n");
 
         if (logToConsole) {
             this.addLineToLog(line);
@@ -23,7 +23,7 @@ public class MainController extends ControllerAbstract {
     }
 
     public void addLineToEnergyCalculatorOutput(String line, boolean logToConsole) {
-        this.view.addLineToRecommendationsOutput(line);
+        this.view.addLineToRecommendationsOutput(line + "\n");
 
         if (logToConsole) {
             this.addLineToLog(line);
@@ -31,7 +31,7 @@ public class MainController extends ControllerAbstract {
     }
 
     public void addLineToLog(String line) {
-        this.view.addLineToLog(line);
+        this.view.addLineToLog(line + "\n");
         System.out.println(line);
     }
 

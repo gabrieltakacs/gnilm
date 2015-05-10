@@ -1,5 +1,6 @@
 package Processor;
 
+import Configuration.Configuration;
 import Controllers.MainController;
 import Data.Channel;
 import Data.House;
@@ -11,20 +12,14 @@ public class Processor extends ModelAbstract {
 
     private Integer trainDataFrom;
     private Integer trainDataTo;
-
     private Integer testDataFrom;
     private Integer testDataTo;
-
     private House house;
-
     private ArrayList<Channel> trainDataChannels;
-
-    private Double initialConsumption;
 
     public Processor(MainController controller) {
         super(controller);
         this.trainDataChannels = new ArrayList<Channel>();
-        this.initialConsumption = null;
     }
 
     public void setTrainDataRange(Integer from, Integer to) {
@@ -57,27 +52,16 @@ public class Processor extends ModelAbstract {
             channels.add(channel);
         }
 
-        // Calculate initial consumption
-        Double currentConsumption = this.getInitialConsumption();
-//        System.out.println("Initial consumption: " + currentConsumption);
-
         for (Iterator<Window> mainsWindowsIterator = mainsChannel.getWindows(this.testDataFrom, this.testDataTo).iterator(); mainsWindowsIterator.hasNext();) {
             Double minScore = null;
             Integer timestamp = null;
-            Window winningWindow = null;
             Channel winningChannel = null;
 
             Window currentMainsWindow = mainsWindowsIterator.next();
 
-            this.controller.addLineToDisaggregationOutput("Mains window detected @ " + currentMainsWindow.getTimestamp(), true);
-
-            currentConsumption += currentMainsWindow.getDeltaValue();
-            currentMainsWindow.printData();
+            this.controller.addLineToDisaggregationOutput("Event @ " + currentMainsWindow.getTimestamp(), true);
 
             for (Iterator<Channel> channelIterator = channels.iterator(); channelIterator.hasNext();) {
-
-                Double sumaNaKanal = 0.0;
-                Integer pocetMeraniNaKanal = 0;
 
                 Channel currentChannel = channelIterator.next();
                 for (Iterator<Window> channelWindowsIterator = currentChannel.getWindows(this.trainDataFrom, this.trainDataTo).iterator(); channelWindowsIterator.hasNext();) {
@@ -93,7 +77,7 @@ public class Processor extends ModelAbstract {
 
                     Double currentScore = currentMainsWindow.calculateDistance(currentChannelWindow);
 
-                    currentScore += 10 * deltaOfDeltas;
+                    currentScore += Configuration.getInstance().getDeltaBoostConstant() * deltaOfDeltas;
 
 //                    System.out.println(currentChannel.getName() + " @ " + currentChannelWindow.getTimestamp() + "\t" + currentScore.toString() + "\tDD: " + deltaOfDeltas + " M:" + mainsDelta + " C: " + channelDelta);
 
@@ -101,21 +85,15 @@ public class Processor extends ModelAbstract {
                         minScore = currentScore;
                         winningChannel = currentChannel;
                         timestamp = currentChannelWindow.getTimestamp();
-                        winningWindow = currentChannelWindow;
                     }
-
-                    sumaNaKanal += currentScore;
-                    pocetMeraniNaKanal++;
-                }
-
-                Double priemerNaKanal = sumaNaKanal / pocetMeraniNaKanal;
-                if (pocetMeraniNaKanal >= 10) {
-//                    System.out.println("Kanal " + currentChannel.getName() + ", priemer: " + priemerNaKanal + "(" + pocetMeraniNaKanal + ")");
-
                 }
             }
 
-            System.out.println("W: " + winningChannel.getName() + " @ " + timestamp + ", S: " + minScore);
+            this.controller.addLineToDisaggregationOutput("Classification: " + winningChannel.getName(), true);
+            this.controller.addLineToLog("Winning window @ " + timestamp);
+            this.controller.addLineToLog("Final score: " + minScore);
+            this.controller.addLineToLog("");
+
             winningChannel.addAssociatedWindow(currentMainsWindow);
         }
 
@@ -124,20 +102,6 @@ public class Processor extends ModelAbstract {
             channel.closeChannel(this.testDataTo);
             channel.exportToFile("/home/gtakacs/fiit/bp/gnilm/data/export/house2/");
         }
-    }
-
-    private Double getInitialConsumption() {
-        if (this.initialConsumption == null) {
-            Double value = 0.0;
-
-            for (Iterator<Channel> iterator = this.trainDataChannels.iterator(); iterator.hasNext();) {
-                value += iterator.next().getCurrentValue();
-            }
-
-            this.initialConsumption = value;
-        }
-
-        return this.initialConsumption;
     }
 
 }

@@ -2,9 +2,6 @@ package Data;
 
 import java.util.ArrayList;
 
-/**
- * Gabriel Takács, Apr 2015
- */
 public class DataFrame {
 
     private ArrayList<Integer> timestamps;

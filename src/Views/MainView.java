@@ -10,7 +10,6 @@ public class MainView extends JFrame {
 
     private JPanel rootPanel;
     private JTabbedPane tabbedPane;
-    private JPanel statusBarPanel;
     private JScrollBar scrollBar1;
     private JTextArea disaggregationOutput;
     private JTextArea logTextArea;
@@ -21,12 +20,15 @@ public class MainView extends JFrame {
     private JMenuItem menuItemExit;
     private JMenu menuProgram;
     private JMenuItem menuProgramRun;
+    private JMenu menuSettings;
+    private JMenuItem menuSettingsDisaggregation;
 
     public MainView() {
         super("GNILM: Energy Disaggregator");
         setContentPane(rootPanel);
         initMenu();
         setMinimumSize(new Dimension(800, 600));
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,11 +36,11 @@ public class MainView extends JFrame {
     }
 
     public void bindRunActionListener(ActionListener actionListener) {
-
+        menuProgramRun.addActionListener(actionListener);
     }
 
     public void addLineToDisaggregationOutput(String line) {
-        this.disaggregationOutput.append(line + "\n");
+        this.disaggregationOutput.append(line);
     }
 
     public void addLineToRecommendationsOutput(String line) {
@@ -69,14 +71,23 @@ public class MainView extends JFrame {
         menuProgram.setMnemonic(KeyEvent.VK_P);
         menuProgramRun = new JMenuItem("Run");
         menuProgramRun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
-        menuProgramRun.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-            }
-        });
         menuProgram.add(menuProgramRun);
         menuBar.add(menuProgram);
+
+        menuSettings = new JMenu("Settings");
+        menuSettings.setMnemonic(KeyEvent.VK_S);
+        menuSettingsDisaggregation = new JMenuItem("Disaggregation");
+        menuSettingsDisaggregation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GeneralConfigurationView configurationView = new GeneralConfigurationView();
+                configurationView.setVisible(true);
+            }
+        });
+        menuSettings.add(menuSettingsDisaggregation);
+
+        menuBar.add(menuSettings);
 
 
         menuBar.setVisible(true);
