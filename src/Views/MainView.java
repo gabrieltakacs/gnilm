@@ -77,7 +77,7 @@ public class MainView extends JFrame {
 
         menuSettings = new JMenu("Settings");
         menuSettings.setMnemonic(KeyEvent.VK_S);
-        menuSettingsDisaggregation = new JMenuItem("Disaggregation");
+        menuSettingsDisaggregation = new JMenuItem("General");
         menuSettingsDisaggregation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

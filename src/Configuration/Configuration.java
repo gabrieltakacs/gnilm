@@ -16,6 +16,10 @@ public class Configuration {
     private Integer testDataRangeFrom = 1303139500;
     private Integer testDataRangeUntil = 1303140500;
 
+
+    private String highTariffZoneFrom = "6:00";
+    private String highTariffZoneUntil = "22:00";
+
     public static Configuration getInstance() {
         if (instance == null) {
             instance = new Configuration();
@@ -23,10 +27,6 @@ public class Configuration {
 
         return instance;
     }
-
-    public static final String highTariffZoneFrom = "6:00";
-
-    public static final String highTariffZoneUntil = "22:00";
 
     public Double getDeltaBoostConstant() {
         return deltaBoostConstant;
@@ -82,5 +82,21 @@ public class Configuration {
 
     public void setTestDataRangeUntil(Integer testDataRangeUntil) {
         this.testDataRangeUntil = testDataRangeUntil;
+    }
+
+    public String getHighTariffZoneFrom() {
+        return highTariffZoneFrom;
+    }
+
+    public void setHighTariffZoneFrom(String highTariffZoneFrom) {
+        this.highTariffZoneFrom = highTariffZoneFrom;
+    }
+
+    public String getHighTariffZoneUntil() {
+        return highTariffZoneUntil;
+    }
+
+    public void setHighTariffZoneUntil(String highTariffZoneUntil) {
+        this.highTariffZoneUntil = highTariffZoneUntil;
     }
 }

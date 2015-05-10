@@ -11,11 +11,13 @@ public class GeneralConfigurationView extends JDialog {
     private JButton buttonCancel;
     private JTextField deltaBoostConstantInput;
     private JTextField defaultWindowDetectionThresholdInput;
+    private JTextField highTariffStartField;
+    private JTextField highTariffEndField;
 
     public GeneralConfigurationView() {
         setContentPane(contentPane);
         setTitle("GNILM: Disaggregation settings");
-        setSize(400, 150);
+        setSize(400, 200);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         loadConfiguredValues();
@@ -56,13 +58,21 @@ public class GeneralConfigurationView extends JDialog {
     }
 
     private void loadConfiguredValues() {
-        this.defaultWindowDetectionThresholdInput.setText(Configuration.getInstance().getDefaultEventDetectionThreshold().toString());
-        this.deltaBoostConstantInput.setText(Configuration.getInstance().getDeltaBoostConstant().toString());
+        Configuration configuration = Configuration.getInstance();
+
+        this.defaultWindowDetectionThresholdInput.setText(configuration.getDefaultEventDetectionThreshold().toString());
+        this.deltaBoostConstantInput.setText(configuration.getDeltaBoostConstant().toString());
+        this.highTariffStartField.setText(configuration.getHighTariffZoneFrom());
+        this.highTariffEndField.setText(configuration.getHighTariffZoneUntil());
     }
 
     private void saveValues() {
-        Configuration.getInstance().setDeltaBoostConstant(Double.parseDouble(this.deltaBoostConstantInput.getText()));
-        Configuration.getInstance().setDefaultEventDetectionThreshold(Double.parseDouble(this.defaultWindowDetectionThresholdInput.getText()));
+        Configuration configuration = Configuration.getInstance();
+
+        configuration.setDeltaBoostConstant(Double.parseDouble(this.deltaBoostConstantInput.getText()));
+        configuration.setDefaultEventDetectionThreshold(Double.parseDouble(this.defaultWindowDetectionThresholdInput.getText()));
+        configuration.setHighTariffZoneFrom(this.highTariffStartField.getText());
+        configuration.setHighTariffZoneUntil(this.highTariffEndField.getText());
     }
 
     public static void main(String[] args) {

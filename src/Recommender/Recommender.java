@@ -17,8 +17,10 @@ public class Recommender {
     private MainController controller;
 
     public Recommender() {
-        this.highTariffZoneFrom = TimeUtils.convertHoursStringToDate(Configuration.highTariffZoneFrom);
-        this.highTariffZoneUntil = TimeUtils.convertHoursStringToDate(Configuration.highTariffZoneUntil);
+        Configuration configuration = Configuration.getInstance();
+
+        this.highTariffZoneFrom = TimeUtils.convertHoursStringToDate(configuration.getHighTariffZoneFrom());
+        this.highTariffZoneUntil = TimeUtils.convertHoursStringToDate(configuration.getHighTariffZoneUntil());
     }
 
     public void setController(MainController controller) {
