@@ -3,6 +3,7 @@ package Controllers;
 import Controllers.Listeners.RunDialogActionListener;
 import Utils.Log;
 import Views.MainView;
+import javax.swing.*;
 
 public class MainController extends ControllerAbstract {
 
@@ -13,7 +14,6 @@ public class MainController extends ControllerAbstract {
         this.view.setVisible(true);
 
         Log.getInstance().setController(this);
-
         view.bindRunActionListener(new RunDialogActionListener().setController(this));
     }
 
@@ -35,7 +35,18 @@ public class MainController extends ControllerAbstract {
 
     public void addLineToLog(String line) {
         this.view.addLineToLog(line + "\n");
-        System.out.println(line);
+    }
+
+    public void displayInfoModal(String message) {
+        JOptionPane.showMessageDialog(null, message, "GNILM: Info", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void displayWarningModal(String message) {
+        JOptionPane.showMessageDialog(null, message, "GNILM: Warning", JOptionPane.WARNING_MESSAGE);
+    }
+
+    public void displayFatalModal(String message) {
+        JOptionPane.showMessageDialog(null, message, "GNILM: Error", JOptionPane.ERROR_MESSAGE);
     }
 
 }

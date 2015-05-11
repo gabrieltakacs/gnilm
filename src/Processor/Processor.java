@@ -6,6 +6,8 @@ import Data.Channel;
 import Data.DataFactory;
 import Data.House;
 import Models.ModelAbstract;
+import Utils.Log;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -106,7 +108,8 @@ public class Processor extends ModelAbstract {
             channel.exportToFile(Configuration.getInstance().getInputDirectory());
         }
 
-        this.controller.addLineToDisaggregationOutput("Run finished.", true);
+        this.controller.addLineToDisaggregationOutput("Run finished.", false);
+        Log.getInstance().addInfo("Run finished.", true);
     }
 
     private void initData() throws Exception {

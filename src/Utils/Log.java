@@ -25,5 +25,26 @@ public class Log {
         System.out.println(message);
     }
 
+    public void addInfo(String message, Boolean displayModal) {
+        this.log("[I] " + message);
+
+        if (displayModal) {
+            this.controller.displayInfoModal(message);
+        }
+    }
+
+    public void addWarning(String message, Boolean displayModal) {
+        this.log("[W] " + message);
+
+        if (displayModal) {
+            this.controller.displayWarningModal(message);
+        }
+    }
+
+    public void addFatalError(String message) {
+        this.log("[F] " + message);
+        this.controller.displayFatalModal(message);
+    }
+
 
 }
