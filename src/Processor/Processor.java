@@ -34,7 +34,7 @@ public class Processor extends ModelAbstract {
         try {
             this.house = DataFactory.getHouse(configuration.getInputDirectory());
         } catch (Exception exception) {
-            // TODO: implement
+            Log.getInstance().addFatalError(exception.getMessage());
         }
 
     }

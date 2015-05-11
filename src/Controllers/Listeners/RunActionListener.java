@@ -3,6 +3,8 @@ package Controllers.Listeners;
 import Data.Channel;
 import Processor.Processor;
 import Recommender.Recommender;
+import Utils.Log;
+
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,7 +26,7 @@ public class RunActionListener extends ActionListenerAbstract {
                         recommender.generateRecommendations(iterator.next());
                     }
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    Log.getInstance().addFatalError(e.getMessage());
                 }
             }
         }).start();

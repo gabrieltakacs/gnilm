@@ -49,6 +49,10 @@ public class House {
             channels.add(channel);
         }
 
+        if (channels.size() == 0) {
+            throw new Exception("No appliance channels found!");
+        }
+
         return channels;
     }
 
