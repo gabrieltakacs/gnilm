@@ -60,6 +60,8 @@ public class Channel {
             throw new Exception("Channel file is not readable!");
         }
 
+        Integer testDataFrom = Configuration.getInstance().getTestDataRangeFrom();
+
         DataFrame dataFrame = new DataFrame();
         BufferedReader reader = new BufferedReader(new FileReader(this.file));
         String line;
@@ -69,6 +71,10 @@ public class Channel {
             Double timestampDoubleValue = Double.parseDouble(parts[0]);
             Integer timestamp = timestampDoubleValue.intValue();
             Double value = Double.parseDouble(parts[1]);
+
+            if (timestamp.equals(testDataFrom)) {
+                this.setCurrentValue(value);
+            }
 
             if (timestampFrom != null && timestamp < timestampFrom) {
                 continue;

@@ -1,9 +1,6 @@
 package Controllers.Listeners;
 
-import Configuration.Configuration;
 import Data.Channel;
-import Data.DataFactory;
-import Data.House;
 import Processor.Processor;
 import Recommender.Recommender;
 import java.awt.event.ActionEvent;
