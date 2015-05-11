@@ -42,6 +42,8 @@ public class Processor extends ModelAbstract {
     }
 
     public void detectEvents() throws Exception {
+        this.initData();
+
         // Detect mains windows
         Channel mainsChannel = house.getChannel("mains");
 
@@ -102,6 +104,20 @@ public class Processor extends ModelAbstract {
             Channel channel = iterator.next();
             channel.closeChannel(this.testDataTo);
             channel.exportToFile(Configuration.getInstance().getInputDirectory());
+        }
+
+        this.controller.addLineToDisaggregationOutput("Run finished.", true);
+    }
+
+    private void initData() throws Exception {
+        Configuration configuration = Configuration.getInstance();
+
+        House house = DataFactory.getHouse(configuration.getInputDirectory());
+        ArrayList<Channel> applianceChannels = house.getApplianceChannels();
+        for (Iterator<Channel> iterator = applianceChannels.iterator(); iterator.hasNext();) {
+            Channel channel = iterator.next();
+            channel.setWindowThreshold(configuration.getThreshold(channel.getName()));
+            this.addTrainDataChannel(channel);
         }
     }
 

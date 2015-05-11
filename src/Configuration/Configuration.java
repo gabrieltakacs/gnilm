@@ -1,5 +1,7 @@
 package Configuration;
 
+import java.util.HashMap;
+
 public class Configuration {
 
     private static Configuration instance = null;
@@ -20,12 +22,34 @@ public class Configuration {
     private String highTariffZoneFrom = "6:00";
     private String highTariffZoneUntil = "22:00";
 
+    private HashMap<String, Double> thresholds;
+
     public static Configuration getInstance() {
         if (instance == null) {
             instance = new Configuration();
+
+            // Initialize thresholds
+            instance.thresholds = new HashMap<String, Double>();
+            instance.initThresholds();
         }
 
         return instance;
+    }
+
+    private void initThresholds() {
+        this.setThreshold("mains", 10.0);
+    }
+
+    public void setThreshold(String channel, Double value) {
+        this.thresholds.put(channel, value);
+    }
+
+    public Double getThreshold(String channel) {
+        Double threshold =  this.thresholds.get(channel);
+        if (threshold == null) {
+            return this.defaultEventDetectionThreshold;
+        }
+        return threshold;
     }
 
     public Double getDeltaBoostConstant() {

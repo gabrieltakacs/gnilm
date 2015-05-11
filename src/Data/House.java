@@ -1,6 +1,7 @@
 package Data;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -29,6 +30,26 @@ public class House {
         }
 
         return this.channels;
+    }
+
+    public ArrayList<Channel> getApplianceChannels() throws Exception {
+        ArrayList<Channel> channels = new ArrayList<Channel>();
+        File[] files = this.baseDirectory.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                if (name.endsWith(".dat") && !name.endsWith(".gnilm.dat") && !name.contains("mains")) {
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        for (File file : files) {
+            Channel channel = new Channel(file);
+            channels.add(channel);
+        }
+
+        return channels;
     }
 
     public Channel getChannel(String channelName) throws Exception {
