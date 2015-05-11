@@ -48,16 +48,18 @@ public class Processor extends ModelAbstract {
 
         // Detect mains windows
         Channel mainsChannel = house.getChannel("mains");
+        mainsChannel.setDataRange(this.testDataFrom, this.testDataTo);
 
         // Detect channels windows
         ArrayList<Channel> channels = new ArrayList<Channel>();
         for (Iterator<Channel> trainChannelsIterator = this.trainDataChannels.iterator(); trainChannelsIterator.hasNext();) { // Iterate over each channel
             Channel channel = trainChannelsIterator.next();
             channel.setCurrentTimestamp(this.testDataFrom);
+            channel.setDataRange(this.trainDataFrom, this.trainDataTo);
             channels.add(channel);
         }
 
-        for (Iterator<Window> mainsWindowsIterator = mainsChannel.getWindows(this.testDataFrom, this.testDataTo).iterator(); mainsWindowsIterator.hasNext();) {
+        for (Iterator<Window> mainsWindowsIterator = mainsChannel.getWindows().iterator(); mainsWindowsIterator.hasNext();) {
             Double minScore = null;
             Integer timestamp = null;
             Channel winningChannel = null;
@@ -68,7 +70,7 @@ public class Processor extends ModelAbstract {
             for (Iterator<Channel> channelIterator = channels.iterator(); channelIterator.hasNext();) {
 
                 Channel currentChannel = channelIterator.next();
-                for (Iterator<Window> channelWindowsIterator = currentChannel.getWindows(this.trainDataFrom, this.trainDataTo).iterator(); channelWindowsIterator.hasNext();) {
+                for (Iterator<Window> channelWindowsIterator = currentChannel.getWindows().iterator(); channelWindowsIterator.hasNext();) {
                     Window currentChannelWindow = channelWindowsIterator.next();
 
                     if (!currentChannelWindow.isIncreasing().equals(currentMainsWindow.isIncreasing())) {

@@ -25,6 +25,9 @@ public class Channel {
 
     private TreeMap<Integer, Double> reconstructedConsumption;
 
+    private Integer timestampFrom;
+    private Integer timestampTo;
+
     public Channel(File file) {
         this.file = file;
         String name = file.getName().replaceFirst("[.][^.]+$", "");
@@ -43,10 +46,14 @@ public class Channel {
         this.name = name;
     }
 
-    // TODO: ak tu chcem mat local caching, nemozem tu zadavat from a to ako parametre!
-    public ArrayList<Window> getWindows(Integer timestampFrom, Integer timestampTo) throws Exception {
+    public void setDataRange(Integer timestampFrom, Integer timestampTo) {
+        this.timestampFrom = timestampFrom;
+        this.timestampTo = timestampTo;
+    }
+
+    public ArrayList<Window> getWindows() throws Exception {
         if (this.windows == null) { // Local caching
-            DataFrame dataFrame = this.read(timestampFrom, timestampTo);
+            DataFrame dataFrame = this.read(this.timestampFrom, timestampTo);
 
             WindowExtractor windowExtractor = new WindowExtractor();
             this.windows = windowExtractor.detectWindows(dataFrame, this.windowThreshold);
