@@ -15,9 +15,8 @@ public class Configuration {
     private Integer trainDataRangeFrom = 1303082307;
     private Integer trainDataRangeUntil = 1303709500;
 
-    private Integer testDataRangeFrom = 1303139500;
-    private Integer testDataRangeUntil = 1303140500;
-
+    private Integer testDataRangeFrom = 1303177000;
+    private Integer testDataRangeUntil = 1303178000;
 
     private String highTariffZoneFrom = "6:00";
     private String highTariffZoneUntil = "22:00";

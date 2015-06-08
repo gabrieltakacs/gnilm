@@ -29,7 +29,7 @@ public class RunDialog extends JDialog {
         buttonOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                saveValues();
                 dispose();
             }
         });
