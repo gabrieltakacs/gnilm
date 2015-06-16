@@ -1,9 +1,11 @@
 package Controllers.Listeners;
 
 import Data.Channel;
+import Evaluator.Evaluator;
 import Processor.Processor;
 import Recommender.Recommender;
 import Utils.Log;
+import Evaluator.DataEvaluator;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -25,6 +27,15 @@ public class RunActionListener extends ActionListenerAbstract {
                     for (Iterator<Channel> iterator = applianceChannels.iterator(); iterator.hasNext(); ) {
                         recommender.generateRecommendations(iterator.next());
                     }
+
+                    // Evaluation
+                    Evaluator.getInstance().prepareData();
+                    Evaluator.getInstance().evaluate();
+
+                    // Data Evaluation
+                    DataEvaluator dataEvaluator = new DataEvaluator();
+                    dataEvaluator.evaluate();
+
                 } catch (Exception e) {
                     Log.getInstance().addFatalError(e.getMessage());
                 }

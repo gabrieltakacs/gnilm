@@ -5,6 +5,7 @@ import Controllers.MainController;
 import Data.Channel;
 import Data.DataFactory;
 import Data.House;
+import Evaluator.Evaluator;
 import Models.ModelAbstract;
 import Utils.Log;
 
@@ -94,6 +95,8 @@ public class Processor extends ModelAbstract {
                     }
                 }
             }
+
+            Evaluator.getInstance().registerDetectedEvent(currentMainsWindow.getTimestamp(), winningChannel.getName());
 
             this.controller.addLineToDisaggregationOutput("Classification: " + winningChannel.getName(), true);
             this.controller.addLineToLog("Winning window @ " + timestamp);
